@@ -4,6 +4,7 @@ import { Copy, FileText, Globe, MoreHorizontal, Sliders, Sparkles, Star, Trendin
 import { GSPage } from "@/components/gs/page";
 import { useOpenComposer } from "@/components/gs/composer-context";
 import { loadContentProfile, loadSavedPosts, toggleSavedPost, type ContentProfile } from "@/lib/gs-storage";
+import { MOCK_VIRAL_POSTS as MOCK_POSTS, type ViralPost } from "@/lib/viral-posts";
 
 export const Route = createFileRoute("/posts-virais")({
   head: () => ({ meta: [{ title: "Posts Virais — GS One" }] }),
