@@ -15,6 +15,39 @@ export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
 });
 
+type PasswordCheck = {
+  label: string;
+  ok: boolean;
+};
+
+function evaluatePassword(pwd: string): {
+  checks: PasswordCheck[];
+  score: number;
+  strength: "fraca" | "média" | "forte";
+  valid: boolean;
+  firstError: string | null;
+} {
+  const checks: PasswordCheck[] = [
+    { label: "Pelo menos 8 caracteres", ok: pwd.length >= 8 },
+    { label: "Uma letra maiúscula (A-Z)", ok: /[A-Z]/.test(pwd) },
+    { label: "Uma letra minúscula (a-z)", ok: /[a-z]/.test(pwd) },
+    { label: "Um número (0-9)", ok: /\d/.test(pwd) },
+    { label: "Um caractere especial (!@#$…)", ok: /[^A-Za-z0-9]/.test(pwd) },
+  ];
+  const score = checks.filter((c) => c.ok).length;
+  const strength = score <= 2 ? "fraca" : score <= 4 ? "média" : "forte";
+  const firstFail = checks.find((c) => !c.ok);
+  // Exige todos os 5 requisitos para considerar válida
+  const valid = score === checks.length;
+  return {
+    checks,
+    score,
+    strength,
+    valid,
+    firstError: firstFail ? `A senha não atende aos requisitos: ${firstFail.label.toLowerCase()}.` : null,
+  };
+}
+
 function ResetPasswordPage() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
@@ -24,6 +57,8 @@ function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+
+  const evaluation = evaluatePassword(password);
 
   // O Supabase processa o token de recuperação automaticamente (detectSessionInUrl).
   // Aguardamos o onAuthStateChange para confirmar que existe uma sessão de recovery.
@@ -50,8 +85,8 @@ function ResetPasswordPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (password.length < 6) {
-      setError("A senha precisa ter pelo menos 6 caracteres.");
+    if (!evaluation.valid) {
+      setError(evaluation.firstError ?? "A senha não atende aos requisitos mínimos.");
       return;
     }
     if (password !== confirm) {
@@ -83,7 +118,7 @@ function ResetPasswordPage() {
 
         <h1 className="font-head text-2xl font-bold tracking-tight">Criar nova senha</h1>
         <p className="mt-1 text-sm text-[var(--color-sub)]">
-          Escolha uma senha forte com pelo menos 6 caracteres.
+          Escolha uma senha forte com letras maiúsculas, minúsculas, número e símbolo.
         </p>
 
         {!ready ? (
@@ -117,6 +152,40 @@ function ResetPasswordPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-2.5 text-sm outline-none placeholder:text-[var(--color-faint)] focus:border-[var(--color-orange)]"
             />
+
+            {password.length > 0 && (
+              <div className="space-y-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5">
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--color-border)]">
+                    <div
+                      className={`h-full transition-all ${
+                        evaluation.strength === "fraca"
+                          ? "w-1/3 bg-red-500"
+                          : evaluation.strength === "média"
+                            ? "w-2/3 bg-yellow-500"
+                            : "w-full bg-[var(--color-orange)]"
+                      }`}
+                    />
+                  </div>
+                  <span className="text-[11px] font-medium capitalize text-[var(--color-sub)]">
+                    {evaluation.strength}
+                  </span>
+                </div>
+                <ul className="space-y-1">
+                  {evaluation.checks.map((c) => (
+                    <li
+                      key={c.label}
+                      className={`flex items-center gap-1.5 text-[11px] ${
+                        c.ok ? "text-[var(--color-orange)]" : "text-[var(--color-faint)]"
+                      }`}
+                    >
+                      <span>{c.ok ? "✓" : "○"}</span>
+                      {c.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <input
               type="password"
               required
