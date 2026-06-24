@@ -12,6 +12,7 @@ import {
   Link2,
   Target,
   FileText,
+  Star,
   type LucideIcon,
 } from "lucide-react";
 import { useOpenComposer } from "./composer-context";

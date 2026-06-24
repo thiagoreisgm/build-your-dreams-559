@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SinaisRouteImport } from './routes/sinais'
+import { Route as SalvosRouteImport } from './routes/salvos'
 import { Route as RevisarRouteImport } from './routes/revisar'
 import { Route as PostsViraisRouteImport } from './routes/posts-virais'
 import { Route as PlanejamentoRouteImport } from './routes/planejamento'
@@ -24,6 +25,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SinaisRoute = SinaisRouteImport.update({
   id: '/sinais',
   path: '/sinais',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SalvosRoute = SalvosRouteImport.update({
+  id: '/salvos',
+  path: '/salvos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RevisarRoute = RevisarRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/planejamento': typeof PlanejamentoRoute
   '/posts-virais': typeof PostsViraisRoute
   '/revisar': typeof RevisarRoute
+  '/salvos': typeof SalvosRoute
   '/sinais': typeof SinaisRoute
 }
 export interface FileRoutesByTo {
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/planejamento': typeof PlanejamentoRoute
   '/posts-virais': typeof PostsViraisRoute
   '/revisar': typeof RevisarRoute
+  '/salvos': typeof SalvosRoute
   '/sinais': typeof SinaisRoute
 }
 export interface FileRoutesById {
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/planejamento': typeof PlanejamentoRoute
   '/posts-virais': typeof PostsViraisRoute
   '/revisar': typeof RevisarRoute
+  '/salvos': typeof SalvosRoute
   '/sinais': typeof SinaisRoute
 }
 export interface FileRouteTypes {
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/planejamento'
     | '/posts-virais'
     | '/revisar'
+    | '/salvos'
     | '/sinais'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/planejamento'
     | '/posts-virais'
     | '/revisar'
+    | '/salvos'
     | '/sinais'
   id:
     | '__root__'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/planejamento'
     | '/posts-virais'
     | '/revisar'
+    | '/salvos'
     | '/sinais'
   fileRoutesById: FileRoutesById
 }
@@ -170,6 +182,7 @@ export interface RootRouteChildren {
   PlanejamentoRoute: typeof PlanejamentoRoute
   PostsViraisRoute: typeof PostsViraisRoute
   RevisarRoute: typeof RevisarRoute
+  SalvosRoute: typeof SalvosRoute
   SinaisRoute: typeof SinaisRoute
 }
 
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/sinais'
       fullPath: '/sinais'
       preLoaderRoute: typeof SinaisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/salvos': {
+      id: '/salvos'
+      path: '/salvos'
+      fullPath: '/salvos'
+      preLoaderRoute: typeof SalvosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/revisar': {
@@ -266,6 +286,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlanejamentoRoute: PlanejamentoRoute,
   PostsViraisRoute: PostsViraisRoute,
   RevisarRoute: RevisarRoute,
+  SalvosRoute: SalvosRoute,
   SinaisRoute: SinaisRoute,
 }
 export const routeTree = rootRouteImport
