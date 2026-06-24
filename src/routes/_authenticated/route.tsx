@@ -11,8 +11,7 @@ export const Route = createFileRoute("/_authenticated")({
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       throw redirect({
-        to: "/auth",
-        search: { redirect: location.href },
+        href: `/auth?redirect=${encodeURIComponent(location.href)}`,
       });
     }
     return { user: data.user };
