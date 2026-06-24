@@ -110,7 +110,8 @@ export async function toggleSavedInspiration(inspirationId: string): Promise<boo
   const { error } = await supabase
     .from("saved_items")
     .insert({ user_id: uid, item_type: "inspiration", item_id: inspirationId });
-  if (error) throw error;
+  // 23505 = unique_violation — clique duplo rápido, considera já salvo.
+  if (error && (error as { code?: string }).code !== "23505") throw error;
   return true;
 }
 
