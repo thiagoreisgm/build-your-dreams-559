@@ -1,37 +1,49 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Copy, FileText, Globe, MoreHorizontal, Sliders, Sparkles, Star, TrendingUp } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Copy, FileText, MoreHorizontal, Sliders, Sparkles, Star, TrendingUp } from "lucide-react";
 import { GSPage } from "@/components/gs/page";
 import { useOpenComposer } from "@/components/gs/composer-context";
-import { loadContentProfile, loadSavedPosts, toggleSavedPost, type ContentProfile } from "@/lib/gs-storage";
-import { MOCK_VIRAL_POSTS as MOCK_POSTS, type ViralPost } from "@/lib/viral-posts";
+import { loadContentProfile, type ContentProfile } from "@/lib/gs-storage";
+import {
+  fetchInspirations,
+  fetchSavedInspirationIds,
+  toggleSavedInspiration,
+  type Inspiration,
+} from "@/lib/library";
 
 export const Route = createFileRoute("/_authenticated/posts-virais")({
   head: () => ({ meta: [{ title: "Posts Virais — GS One" }] }),
   component: PostsViraisPage,
 });
 
-
-
-
 function PostsViraisPage() {
+  const qc = useQueryClient();
   const [tab, setTab] = useState<"inspiracao" | "salvos">("inspiracao");
   const [profile, setProfile] = useState<ContentProfile | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [translated, setTranslated] = useState<Record<string, boolean>>({});
   const [copied, setCopied] = useState<string | null>(null);
-  const [saved, setSaved] = useState<Set<string>>(new Set());
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [minLikes, setMinLikes] = useState(50);
+
+  // Filtros aplicados (não reativos ao digitar — aplicam no Buscar/Aplicar)
+  const [searchInput, setSearchInput] = useState("");
+  const [applied, setApplied] = useState({
+    query: "",
+    minLikes: 0,
+    minComments: 0,
+    maxFollowers: 500_000,
+  });
+  // Estado temporário do popover de filtros
+  const [minLikes, setMinLikes] = useState(0);
   const [minComments, setMinComments] = useState(0);
-  const [maxFollowers, setMaxFollowers] = useState(100_000);
+  const [maxFollowers, setMaxFollowers] = useState(500_000);
   const [period, setPeriod] = useState(1);
+
   const openComposer = useOpenComposer();
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setProfile(loadContentProfile());
-    setSaved(new Set(loadSavedPosts().map((s) => s.post_id)));
   }, []);
 
   // Close popovers on outside click
@@ -54,6 +66,30 @@ function PostsViraisPage() {
     return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
+  const inspirationsQuery = useQuery({
+    queryKey: ["inspirations", applied],
+    queryFn: () =>
+      fetchInspirations({
+        query: applied.query || undefined,
+        minLikes: applied.minLikes,
+        minComments: applied.minComments,
+        maxFollowers: applied.maxFollowers,
+      }),
+  });
+
+  const savedQuery = useQuery({
+    queryKey: ["saved-inspirations"],
+    queryFn: fetchSavedInspirationIds,
+  });
+
+  const savedIds = useMemo(
+    () => new Set((savedQuery.data ?? []).map((s) => s.id)),
+    [savedQuery.data],
+  );
+
+  const allPosts = inspirationsQuery.data ?? [];
+  const visiblePosts = tab === "salvos" ? allPosts.filter((p) => savedIds.has(p.id)) : allPosts;
+
   const personalizedSummary = useMemo(() => {
     if (!profile) return "";
     const themes = profile.themes.slice(0, 3).join(", ");
@@ -63,32 +99,38 @@ function PostsViraisPage() {
     return `temas: ${themes} · formatos: ${formats} · idioma: ${langs}`;
   }, [profile]);
 
-  function displayText(p: ViralPost) {
-    if (p.lang === "en" && translated[p.id] && p.translation) return p.translation;
-    return p.text;
-  }
-
-  function onCopy(p: ViralPost) {
-    void navigator.clipboard?.writeText(displayText(p));
+  function onCopy(p: Inspiration) {
+    void navigator.clipboard?.writeText(p.content);
     setCopied(p.id);
     setOpenMenu(null);
     setTimeout(() => setCopied((c) => (c === p.id ? null : c)), 1400);
   }
 
-  function onTranslate(p: ViralPost) {
-    setTranslated((t) => ({ ...t, [p.id]: !t[p.id] }));
+  async function onSave(p: Inspiration) {
     setOpenMenu(null);
+    await toggleSavedInspiration(p.id);
+    qc.invalidateQueries({ queryKey: ["saved-inspirations"] });
   }
 
-  function onSave(p: ViralPost) {
-    const next = toggleSavedPost(p.id);
-    setSaved(new Set(next.map((s) => s.post_id)));
-    setOpenMenu(null);
+  function applySearch() {
+    setApplied((a) => ({ ...a, query: searchInput.trim() }));
   }
 
-  const visiblePosts = tab === "salvos" ? MOCK_POSTS.filter((p) => saved.has(p.id)) : MOCK_POSTS;
+  function applyFilters() {
+    setApplied({
+      query: searchInput.trim(),
+      minLikes,
+      minComments,
+      maxFollowers,
+    });
+    setFiltersOpen(false);
+  }
+
   const activeFilterCount =
-    (minLikes > 0 ? 1 : 0) + (minComments > 0 ? 1 : 0) + (maxFollowers < 500_000 ? 1 : 0) + (period > 0 ? 1 : 0);
+    (applied.minLikes > 0 ? 1 : 0) +
+    (applied.minComments > 0 ? 1 : 0) +
+    (applied.maxFollowers < 500_000 ? 1 : 0) +
+    (period > 0 ? 1 : 0);
 
   return (
     <GSPage>
@@ -114,9 +156,9 @@ function PostsViraisPage() {
             }`}
           >
             <Star className="h-[15px] w-[15px]" strokeWidth={1.6} /> Salvos
-            {saved.size > 0 && (
+            {savedIds.size > 0 && (
               <span className="rounded-full bg-[var(--color-orange)]/15 px-1.5 text-[10px] font-semibold text-[var(--color-orange)]">
-                {saved.size}
+                {savedIds.size}
               </span>
             )}
           </button>
@@ -136,12 +178,16 @@ function PostsViraisPage() {
           >
             Ajustar
           </Link>
-
         </div>
 
         {/* Busca + filtros */}
         <div className="relative mb-6 flex gap-3">
           <input
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") applySearch();
+            }}
             placeholder="Buscar tema, @perfil ou estrutura (ex: gancho contrarian sobre preço)"
             className="flex-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm outline-none placeholder:text-[var(--color-muted)] focus:border-[var(--color-faint)]"
           />
@@ -157,7 +203,10 @@ function PostsViraisPage() {
               </span>
             )}
           </button>
-          <button className="cursor-pointer rounded-xl bg-[var(--color-orange)] px-5 py-2.5 text-sm font-semibold text-[var(--color-bg)] transition hover:opacity-90">
+          <button
+            onClick={applySearch}
+            className="cursor-pointer rounded-xl bg-[var(--color-orange)] px-5 py-2.5 text-sm font-semibold text-[var(--color-bg)] transition hover:opacity-90"
+          >
             Buscar
           </button>
 
@@ -220,7 +269,7 @@ function PostsViraisPage() {
                   Limpar
                 </button>
                 <button
-                  onClick={() => setFiltersOpen(false)}
+                  onClick={applyFilters}
                   className="flex-1 cursor-pointer rounded-lg bg-[var(--color-orange)] py-2 text-[13px] font-semibold text-[var(--color-bg)]"
                 >
                   Aplicar
@@ -231,17 +280,28 @@ function PostsViraisPage() {
         </div>
 
         {/* Grid de posts */}
-        {visiblePosts.length === 0 ? (
+        {inspirationsQuery.isLoading ? (
+          <div className="rounded-2xl border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-16 text-center text-sm text-[var(--color-sub)]">
+            Carregando biblioteca…
+          </div>
+        ) : inspirationsQuery.isError ? (
+          <div className="rounded-2xl border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-16 text-center text-sm text-[var(--color-sub)]">
+            Não foi possível carregar a biblioteca.
+          </div>
+        ) : visiblePosts.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-16 text-center">
-            <p className="text-sm text-[var(--color-sub)]">Nenhum post salvo ainda.</p>
+            <p className="text-sm text-[var(--color-sub)]">
+              {tab === "salvos" ? "Nenhum post salvo ainda." : "Nenhum resultado para esses filtros."}
+            </p>
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-3">
             {visiblePosts.map((p) => {
-              const isTranslated = p.lang === "en" && translated[p.id];
               const menuOpen = openMenu === p.id;
               const isCopied = copied === p.id;
-              const isSaved = saved.has(p.id);
+              const isSaved = savedIds.has(p.id);
+              const likes = p.metrics?.likes ?? 0;
+              const comments = p.metrics?.comments ?? 0;
               return (
                 <div
                   key={p.id}
@@ -249,22 +309,19 @@ function PostsViraisPage() {
                 >
                   <div className="mb-4 flex items-center gap-2.5">
                     <div className="h-8 w-8 shrink-0 rounded-full bg-[var(--color-elevated)]" />
-                    <span className="text-[13px] font-medium">{p.author}</span>
-                    {isTranslated && (
-                      <span className="rounded-full border border-[var(--color-gold)]/40 px-2 py-0.5 text-[10px] text-[var(--color-gold)]">
-                        traduzido
+                    <span className="text-[13px] font-medium">{p.author ?? "—"}</span>
+                    {p.format && (
+                      <span className="ml-auto rounded-full border border-[var(--color-border)] px-2 py-0.5 text-[10px] text-[var(--color-muted)]">
+                        {p.format}
                       </span>
                     )}
-                    <span className="ml-auto rounded-full border border-[var(--color-border)] px-2 py-0.5 text-[10px] text-[var(--color-muted)]">
-                      {p.structure}
-                    </span>
                   </div>
                   <p className="flex-1 text-[13px] leading-relaxed text-[var(--color-sub)]">
-                    {displayText(p)}
+                    {p.content}
                   </p>
                   <div className="mt-4 flex items-center justify-between border-t border-[var(--color-border)] pt-4">
                     <span className="text-xs text-[var(--color-muted)]">
-                      {p.likes} · {p.comments} coment.
+                      {likes} · {comments} coment.
                     </span>
                     <div className="flex items-center gap-1">
                       <button
@@ -292,15 +349,6 @@ function PostsViraisPage() {
                             <MenuItem icon={<Copy className="h-[15px] w-[15px]" />} onClick={() => onCopy(p)}>
                               {isCopied ? "Copiado!" : "Copiar conteúdo"}
                             </MenuItem>
-                            {p.lang === "en" && p.translation && (
-                              <MenuItem
-                                icon={<Globe className="h-[15px] w-[15px]" />}
-                                onClick={() => onTranslate(p)}
-                                aria-pressed={isTranslated}
-                              >
-                                {isTranslated ? "Ver original" : "Traduzir (PT-BR)"}
-                              </MenuItem>
-                            )}
                             <MenuItem
                               icon={<Sparkles className="h-[15px] w-[15px] text-[var(--color-orange)]" />}
                               onClick={() => {

@@ -14,6 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
+      hooks: {
+        Row: {
+          created_at: string
+          id: string
+          text: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          text: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          text?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      inspirations: {
+        Row: {
+          author: string | null
+          content: string
+          created_at: string
+          cta: string | null
+          cta_type: string | null
+          format: string | null
+          hook: string | null
+          id: string
+          language: string | null
+          metrics: Json
+          search_tsv: unknown
+          source_url: string | null
+          structure_steps: string[]
+          topic: string[]
+        }
+        Insert: {
+          author?: string | null
+          content: string
+          created_at?: string
+          cta?: string | null
+          cta_type?: string | null
+          format?: string | null
+          hook?: string | null
+          id?: string
+          language?: string | null
+          metrics?: Json
+          search_tsv?: unknown
+          source_url?: string | null
+          structure_steps?: string[]
+          topic?: string[]
+        }
+        Update: {
+          author?: string | null
+          content?: string
+          created_at?: string
+          cta?: string | null
+          cta_type?: string | null
+          format?: string | null
+          hook?: string | null
+          id?: string
+          language?: string | null
+          metrics?: Json
+          search_tsv?: unknown
+          source_url?: string | null
+          structure_steps?: string[]
+          topic?: string[]
+        }
+        Relationships: []
+      }
       integrations: {
         Row: {
           access_token: string | null
@@ -89,6 +161,54 @@ export type Database = {
           niche?: string | null
           onboarding_completed?: boolean
           updated_at?: string
+        }
+        Relationships: []
+      }
+      saved_items: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      templates: {
+        Row: {
+          body: string
+          created_at: string
+          format: string | null
+          id: string
+          title: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          format?: string | null
+          id?: string
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          format?: string | null
+          id?: string
+          title?: string
         }
         Relationships: []
       }
