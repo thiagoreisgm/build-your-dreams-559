@@ -118,7 +118,7 @@ function ResetPasswordPage() {
 
         <h1 className="font-head text-2xl font-bold tracking-tight">Criar nova senha</h1>
         <p className="mt-1 text-sm text-[var(--color-sub)]">
-          Escolha uma senha forte com pelo menos 6 caracteres.
+          Escolha uma senha forte com letras maiúsculas, minúsculas, número e símbolo.
         </p>
 
         {!ready ? (
