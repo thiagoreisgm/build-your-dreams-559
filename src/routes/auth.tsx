@@ -144,34 +144,46 @@ function AuthPage() {
         </div>
 
         <h1 className="font-head text-2xl font-bold tracking-tight">
-          {mode === "signin" ? "Entrar na sua conta" : "Criar sua conta"}
+          {mode === "signin"
+            ? "Entrar na sua conta"
+            : mode === "signup"
+              ? "Criar sua conta"
+              : "Redefinir senha"}
         </h1>
         <p className="mt-1 text-sm text-[var(--color-sub)]">
-          {mode === "signin" ? "Bem-vindo de volta." : "Configure seu loop em minutos."}
+          {mode === "signin"
+            ? "Bem-vindo de volta."
+            : mode === "signup"
+              ? "Configure seu loop em minutos."
+              : "Informe seu e-mail e enviaremos um link para criar uma nova senha."}
         </p>
 
-        <button
-          type="button"
-          onClick={handleGoogle}
-          disabled={loading}
-          className="mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm font-medium transition hover:bg-[var(--color-elevated)] disabled:opacity-50"
-        >
-          <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden>
-            <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35.5 24 35.5c-6.4 0-11.5-5.1-11.5-11.5S17.6 12.5 24 12.5c2.9 0 5.6 1.1 7.6 2.9l5.7-5.7C33.6 6.4 29 4.5 24 4.5 13.2 4.5 4.5 13.2 4.5 24S13.2 43.5 24 43.5c10.8 0 19.5-7.8 19.5-19.5 0-1.2-.1-2.3-.4-3.5z"/>
-            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 19 12.5 24 12.5c2.9 0 5.6 1.1 7.6 2.9l5.7-5.7C33.6 6.4 29 4.5 24 4.5 16.3 4.5 9.7 8.9 6.3 14.7z"/>
-            <path fill="#4CAF50" d="M24 43.5c5.2 0 9.9-1.8 13.6-4.9l-6.3-5.2c-2 1.5-4.5 2.4-7.3 2.4-5.3 0-9.7-3.1-11.3-7.4l-6.5 5C9.6 39 16.2 43.5 24 43.5z"/>
-            <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.4l6.3 5.2c-.4.4 7-5.1 7-14.6 0-1.2-.1-2.3-.4-3.5z"/>
-          </svg>
-          Continuar com Google
-        </button>
+        {mode !== "forgot" && (
+          <>
+            <button
+              type="button"
+              onClick={handleGoogle}
+              disabled={loading}
+              className="mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm font-medium transition hover:bg-[var(--color-elevated)] disabled:opacity-50"
+            >
+              <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden>
+                <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35.5 24 35.5c-6.4 0-11.5-5.1-11.5-11.5S17.6 12.5 24 12.5c2.9 0 5.6 1.1 7.6 2.9l5.7-5.7C33.6 6.4 29 4.5 24 4.5 13.2 4.5 4.5 13.2 4.5 24S13.2 43.5 24 43.5c10.8 0 19.5-7.8 19.5-19.5 0-1.2-.1-2.3-.4-3.5z" />
+                <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 19 12.5 24 12.5c2.9 0 5.6 1.1 7.6 2.9l5.7-5.7C33.6 6.4 29 4.5 24 4.5 16.3 4.5 9.7 8.9 6.3 14.7z" />
+                <path fill="#4CAF50" d="M24 43.5c5.2 0 9.9-1.8 13.6-4.9l-6.3-5.2c-2 1.5-4.5 2.4-7.3 2.4-5.3 0-9.7-3.1-11.3-7.4l-6.5 5C9.6 39 16.2 43.5 24 43.5z" />
+                <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.4l6.3 5.2c-.4.4 7-5.1 7-14.6 0-1.2-.1-2.3-.4-3.5z" />
+              </svg>
+              Continuar com Google
+            </button>
 
-        <div className="my-5 flex items-center gap-3 text-[11px] uppercase tracking-[0.15em] text-[var(--color-faint)]">
-          <div className="h-px flex-1 bg-[var(--color-border)]" />
-          ou
-          <div className="h-px flex-1 bg-[var(--color-border)]" />
-        </div>
+            <div className="my-5 flex items-center gap-3 text-[11px] tracking-[0.15em] text-[var(--color-faint)] uppercase">
+              <div className="h-px flex-1 bg-[var(--color-border)]" />
+              ou
+              <div className="h-px flex-1 bg-[var(--color-border)]" />
+            </div>
+          </>
+        )}
 
-        <form onSubmit={handleEmail} className="space-y-3">
+        <form onSubmit={handleEmail} className={`space-y-3 ${mode === "forgot" ? "mt-6" : ""}`}>
           {mode === "signup" && (
             <input
               type="text"
@@ -190,19 +202,42 @@ function AuthPage() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-2.5 text-sm outline-none placeholder:text-[var(--color-faint)] focus:border-[var(--color-orange)]"
           />
-          <input
-            type="password"
-            required
-            minLength={6}
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-2.5 text-sm outline-none placeholder:text-[var(--color-faint)] focus:border-[var(--color-orange)]"
-          />
+          {mode !== "forgot" && (
+            <input
+              type="password"
+              required
+              minLength={6}
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-2.5 text-sm outline-none placeholder:text-[var(--color-faint)] focus:border-[var(--color-orange)]"
+            />
+          )}
+
+          {mode === "signin" && (
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("forgot");
+                  setError(null);
+                  setInfo(null);
+                }}
+                className="cursor-pointer text-xs text-[var(--color-sub)] hover:text-[var(--color-orange)]"
+              >
+                Esqueci minha senha
+              </button>
+            </div>
+          )}
 
           {error && (
             <p className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">
               {error}
+            </p>
+          )}
+          {info && (
+            <p className="rounded-md border border-[var(--color-orange)]/30 bg-[var(--color-orange)]/10 px-3 py-2 text-xs text-[var(--color-orange)]">
+              {info}
             </p>
           )}
 
@@ -212,22 +247,42 @@ function AuthPage() {
             className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[var(--color-orange)] px-4 py-2.5 text-sm font-semibold text-[var(--color-bg)] transition hover:opacity-90 disabled:opacity-50"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-            {mode === "signin" ? "Entrar" : "Criar conta"}
+            {mode === "signin" ? "Entrar" : mode === "signup" ? "Criar conta" : "Enviar link de redefinição"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-xs text-[var(--color-sub)]">
-          {mode === "signin" ? "Ainda não tem conta?" : "Já tem conta?"}{" "}
-          <button
-            type="button"
-            onClick={() => {
-              setMode(mode === "signin" ? "signup" : "signin");
-              setError(null);
-            }}
-            className="cursor-pointer font-semibold text-[var(--color-orange)] hover:underline"
-          >
-            {mode === "signin" ? "Criar conta" : "Entrar"}
-          </button>
+          {mode === "forgot" ? (
+            <>
+              Lembrou a senha?{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("signin");
+                  setError(null);
+                  setInfo(null);
+                }}
+                className="cursor-pointer font-semibold text-[var(--color-orange)] hover:underline"
+              >
+                Voltar para o login
+              </button>
+            </>
+          ) : (
+            <>
+              {mode === "signin" ? "Ainda não tem conta?" : "Já tem conta?"}{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setMode(mode === "signin" ? "signup" : "signin");
+                  setError(null);
+                  setInfo(null);
+                }}
+                className="cursor-pointer font-semibold text-[var(--color-orange)] hover:underline"
+              >
+                {mode === "signin" ? "Criar conta" : "Entrar"}
+              </button>
+            </>
+          )}
         </p>
 
         <p className="mt-4 text-center text-[11px] text-[var(--color-faint)]">
