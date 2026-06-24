@@ -81,6 +81,9 @@ export function Sidebar() {
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
   }
+
+  return (
+    <aside className="fixed top-0 left-0 z-20 flex h-screen w-60 shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)]">
       <div className="flex h-16 items-center gap-2.5 border-b border-[var(--color-border)] px-5">
         <div className="font-display flex h-7 w-7 items-center justify-center rounded-md bg-[var(--color-orange)] text-[11px] text-[var(--color-bg)]">
           GS
