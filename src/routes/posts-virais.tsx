@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Copy, FileText, Globe, MoreHorizontal, Sliders, Sparkles, Star, TrendingUp } from "lucide-react";
 import { GSPage } from "@/components/gs/page";
 import { useOpenComposer } from "@/components/gs/composer-context";
-import { loadContentProfile, type ContentProfile } from "@/lib/gs-storage";
+import { loadContentProfile, loadSavedPosts, toggleSavedPost, type ContentProfile } from "@/lib/gs-storage";
 
 export const Route = createFileRoute("/posts-virais")({
   head: () => ({ meta: [{ title: "Posts Virais — GS One" }] }),
