@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Copy, FileText, Globe, MoreHorizontal, Sliders, Sparkles, Star, TrendingUp } from "lucide-react";
 import { GSPage } from "@/components/gs/page";
 import { useOpenComposer } from "@/components/gs/composer-context";
-import { loadContentProfile, type ContentProfile } from "@/lib/gs-storage";
+import { loadContentProfile, loadSavedPosts, toggleSavedPost, type ContentProfile } from "@/lib/gs-storage";
 
 export const Route = createFileRoute("/posts-virais")({
   head: () => ({ meta: [{ title: "Posts Virais — GS One" }] }),
@@ -75,6 +75,7 @@ function PostsViraisPage() {
 
   useEffect(() => {
     setProfile(loadContentProfile());
+    setSaved(new Set(loadSavedPosts().map((s) => s.post_id)));
   }, []);
 
   // Close popovers on outside click
@@ -124,12 +125,8 @@ function PostsViraisPage() {
   }
 
   function onSave(p: ViralPost) {
-    setSaved((s) => {
-      const next = new Set(s);
-      if (next.has(p.id)) next.delete(p.id);
-      else next.add(p.id);
-      return next;
-    });
+    const next = toggleSavedPost(p.id);
+    setSaved(new Set(next.map((s) => s.post_id)));
     setOpenMenu(null);
   }
 
