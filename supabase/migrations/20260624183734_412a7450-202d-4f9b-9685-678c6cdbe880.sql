@@ -1,0 +1,2 @@
+GRANT SELECT (id, user_id, provider, provider_account_id, scope, expires_at, metadata, created_at, updated_at), INSERT, UPDATE, DELETE ON public.integrations TO authenticated;
+GRANT ALL ON public.integrations TO service_role;
