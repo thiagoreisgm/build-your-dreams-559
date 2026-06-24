@@ -43,13 +43,10 @@ const groups: { title: string; items: Item[] }[] = [
     ],
   },
   {
-    title: "Configurações",
-    items: [
-      { to: "/conteudo", label: "Conteúdo", icon: FileText },
-      { to: "/icp", label: "ICP", icon: Target },
-      { to: "/integracoes", label: "Integrações", icon: Link2 },
-    ],
+    title: "Conta",
+    items: [{ to: "/configuracoes", label: "Configurações", icon: Settings }],
   },
+
 ];
 
 export function Sidebar() {
