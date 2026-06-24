@@ -31,13 +31,19 @@ function translateAuthError(err: unknown): string {
     return "Já existe uma conta com esse e-mail. Faça login.";
   if (msg.includes("email not confirmed"))
     return "Confirme seu e-mail antes de entrar.";
+  if (msg.includes("user not found"))
+    return "Não encontramos uma conta com esse e-mail.";
+  if (msg.includes("same password"))
+    return "A nova senha precisa ser diferente da anterior.";
   if (msg.includes("invalid email")) return "E-mail inválido.";
-  if (msg.includes("rate limit") || msg.includes("too many"))
+  if (msg.includes("rate limit") || msg.includes("too many") || msg.includes("for security purposes"))
     return "Muitas tentativas. Tente novamente em alguns minutos.";
   if (msg.includes("network") || msg.includes("failed to fetch"))
     return "Falha de conexão. Verifique sua internet e tente de novo.";
   return raw || "Erro ao autenticar.";
 }
+
+export { translateAuthError };
 
 function AuthPage() {
   const { redirect: redirectParam } = Route.useSearch();
