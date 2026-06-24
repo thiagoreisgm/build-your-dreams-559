@@ -31,11 +31,7 @@ export type InspirationFilters = {
 };
 
 export async function fetchInspirations(filters: InspirationFilters = {}): Promise<Inspiration[]> {
-  let q = supabase
-    .from("inspirations")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(60);
+  let q = supabase.from("inspirations").select("*");
 
   if (filters.query && filters.query.trim()) {
     q = q.textSearch("search_tsv", filters.query.trim(), {
@@ -45,23 +41,22 @@ export async function fetchInspirations(filters: InspirationFilters = {}): Promi
   }
   if (filters.format) q = q.eq("format", filters.format);
   if (filters.language) q = q.eq("language", filters.language);
-  // Filtros numéricos sobre jsonb metrics (filtragem aplicada no client porque
-  // queries sobre jsonb numérico ficam verbosas; o corpus é pequeno).
 
-  const { data, error } = await q;
-  if (error) throw error;
-
-  let rows = (data ?? []) as Inspiration[];
+  // Filtros numéricos aplicados no banco via colunas geradas + índices,
+  // ANTES do limit, para evitar resultados incompletos quando o corpus crescer.
   if (filters.minLikes && filters.minLikes > 0) {
-    rows = rows.filter((r) => (r.metrics?.likes ?? 0) >= filters.minLikes!);
+    q = q.gte("likes_count", filters.minLikes);
   }
   if (filters.minComments && filters.minComments > 0) {
-    rows = rows.filter((r) => (r.metrics?.comments ?? 0) >= filters.minComments!);
+    q = q.gte("comments_count", filters.minComments);
   }
   if (filters.maxFollowers && filters.maxFollowers < 500_000) {
-    rows = rows.filter((r) => (r.metrics?.followers ?? 0) <= filters.maxFollowers!);
+    q = q.lte("followers_count", filters.maxFollowers);
   }
-  return rows;
+
+  const { data, error } = await q.order("created_at", { ascending: false }).limit(60);
+  if (error) throw error;
+  return (data ?? []) as Inspiration[];
 }
 
 export async function fetchInspirationsByIds(ids: string[]): Promise<Inspiration[]> {
@@ -115,7 +110,8 @@ export async function toggleSavedInspiration(inspirationId: string): Promise<boo
   const { error } = await supabase
     .from("saved_items")
     .insert({ user_id: uid, item_type: "inspiration", item_id: inspirationId });
-  if (error) throw error;
+  // 23505 = unique_violation — clique duplo rápido, considera já salvo.
+  if (error && (error as { code?: string }).code !== "23505") throw error;
   return true;
 }
 

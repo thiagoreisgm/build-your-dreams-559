@@ -146,7 +146,7 @@ function ResetPasswordPage() {
             <input
               type="password"
               required
-              minLength={6}
+              minLength={8}
               placeholder="Nova senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -189,7 +189,7 @@ function ResetPasswordPage() {
             <input
               type="password"
               required
-              minLength={6}
+              minLength={8}
               placeholder="Confirmar nova senha"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}

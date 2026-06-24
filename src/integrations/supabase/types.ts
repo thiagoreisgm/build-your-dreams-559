@@ -38,14 +38,17 @@ export type Database = {
       inspirations: {
         Row: {
           author: string | null
+          comments_count: number | null
           content: string
           created_at: string
           cta: string | null
           cta_type: string | null
+          followers_count: number | null
           format: string | null
           hook: string | null
           id: string
           language: string | null
+          likes_count: number | null
           metrics: Json
           search_tsv: unknown
           source_url: string | null
@@ -54,14 +57,17 @@ export type Database = {
         }
         Insert: {
           author?: string | null
+          comments_count?: number | null
           content: string
           created_at?: string
           cta?: string | null
           cta_type?: string | null
+          followers_count?: number | null
           format?: string | null
           hook?: string | null
           id?: string
           language?: string | null
+          likes_count?: number | null
           metrics?: Json
           search_tsv?: unknown
           source_url?: string | null
@@ -70,14 +76,17 @@ export type Database = {
         }
         Update: {
           author?: string | null
+          comments_count?: number | null
           content?: string
           created_at?: string
           cta?: string | null
           cta_type?: string | null
+          followers_count?: number | null
           format?: string | null
           hook?: string | null
           id?: string
           language?: string | null
+          likes_count?: number | null
           metrics?: Json
           search_tsv?: unknown
           source_url?: string | null

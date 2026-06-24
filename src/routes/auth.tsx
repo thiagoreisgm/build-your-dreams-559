@@ -24,15 +24,11 @@ function translateAuthError(err: unknown): string {
   if (msg.includes("invalid login credentials") || msg.includes("invalid credentials"))
     return "E-mail ou senha incorretos.";
   if (msg.includes("password should be at least") || msg.includes("password is too short"))
-    return "A senha precisa ter pelo menos 6 caracteres.";
+    return "A senha precisa ter pelo menos 8 caracteres.";
   if (msg.includes("password") && msg.includes("weak"))
-    return "Senha muito fraca. Use letras, números e ao menos 8 caracteres.";
-  if (msg.includes("user already registered") || msg.includes("already registered"))
-    return "Já existe uma conta com esse e-mail. Faça login.";
+    return "Senha muito fraca. Use pelo menos 8 caracteres com letras, números e símbolos.";
   if (msg.includes("email not confirmed"))
     return "Confirme seu e-mail antes de entrar.";
-  if (msg.includes("user not found"))
-    return "Não encontramos uma conta com esse e-mail.";
   if (msg.includes("same password"))
     return "A nova senha precisa ser diferente da anterior.";
   if (msg.includes("invalid email")) return "E-mail inválido.";
@@ -81,14 +77,21 @@ function AuthPage() {
     e.preventDefault();
     setError(null);
     setInfo(null);
+
+    // Validação de senha no submit (não confiar só no atributo HTML)
+    if (mode !== "forgot" && password.length < 8) {
+      setError("A senha precisa ter pelo menos 8 caracteres.");
+      return;
+    }
+
     setLoading(true);
     try {
       if (mode === "forgot") {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        // Mensagem neutra independente do resultado para não vazar enumeração.
+        await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: window.location.origin + "/reset-password",
         });
-        if (error) throw error;
-        setInfo("Enviamos um link de redefinição para o seu e-mail. Confira a caixa de entrada (e o spam).");
+        setInfo("Se existir uma conta com esse e-mail, enviamos as instruções para redefinir a senha.");
         return;
       }
       if (mode === "signup") {
@@ -100,11 +103,13 @@ function AuthPage() {
             data: { full_name: fullName },
           },
         });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        // Não revela se o e-mail já existe — trata como sucesso aparente.
+        if (error && !/already|registered|exists/i.test(error.message)) throw error;
+        setInfo("Enviamos um e-mail de confirmação. Verifique sua caixa de entrada (e o spam).");
+        return;
       }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
       window.location.replace(safeRedirect(redirectParam));
     } catch (err) {
       setError(translateAuthError(err));
@@ -206,8 +211,8 @@ function AuthPage() {
             <input
               type="password"
               required
-              minLength={6}
-              placeholder="Senha"
+              minLength={8}
+              placeholder="Senha (mín. 8 caracteres)"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-2.5 text-sm outline-none placeholder:text-[var(--color-faint)] focus:border-[var(--color-orange)]"
