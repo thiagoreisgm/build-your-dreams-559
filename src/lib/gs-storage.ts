@@ -98,3 +98,113 @@ export function toggleSavedPost(postId: string): SavedViralPost[] {
   return next;
 }
 
+// ---------------------------------------------------------------------------
+// ICP profile (motor de score de leads + ângulo de mensagem)
+// Mock — mapeia 1:1 com a futura tabela `icp` (user_id, payload jsonb).
+// ---------------------------------------------------------------------------
+
+export type ICPProfile = {
+  target_sectors: string[];
+  revenue_range: number; // 0-100 slider posicional
+  headcount_range: number; // 0-100
+  regions: string[];
+  target_roles: string[];
+  seniority: string[];
+  fit_keywords: string;
+  pains: string[];
+  buy_triggers: string[];
+  qual_budget: string;
+  qual_authority: string;
+  qual_need: string;
+  qual_timing: string;
+  approach_angle: string;
+  weight_role_fit: number;
+  weight_company_fit: number;
+  weight_trigger: number;
+  weight_engagement: number;
+  exclusions: string[];
+};
+
+export const DEFAULT_ICP: ICPProfile = {
+  target_sectors: ["SaaS B2B", "Serviços profissionais", "Indústria"],
+  revenue_range: 60,
+  headcount_range: 55,
+  regions: ["Sudeste", "Sul"],
+  target_roles: ["CEO", "Head de Vendas", "Diretor Comercial"],
+  seniority: ["C-level", "Diretoria"],
+  fit_keywords: "vendas complexas, ticket alto, ciclo longo",
+  pains: ["Time comercial sem processo", "CAC alto", "Pipeline irregular"],
+  buy_triggers: [
+    "Contratou SDR",
+    "Abriu vaga comercial",
+    "Trocou liderança de vendas",
+    "Rodada de investimento",
+    "Expansão geográfica",
+  ],
+  qual_budget: "R$ 15k–60k/mês em operação comercial",
+  qual_authority: "Decisor: CEO/CRO/Head Comercial",
+  qual_need: "Estruturar processo e previsibilidade",
+  qual_timing: "0–90 dias para começar",
+  approach_angle:
+    "Falo direto com o decisor, sem rodeio. Mostro caso de B2B parecido, aponto o gargalo do processo e proponho diagnóstico antes da venda.",
+  weight_role_fit: 70,
+  weight_company_fit: 60,
+  weight_trigger: 85,
+  weight_engagement: 50,
+  exclusions: ["Agências de marketing", "Edtech B2C", "Empresas <10 funcionários"],
+};
+
+export const ICP_SECTORS = [
+  "SaaS B2B",
+  "Serviços profissionais",
+  "Indústria",
+  "Fintech",
+  "Healthtech",
+  "Logística",
+];
+export const ICP_REGIONS = ["Sudeste", "Sul", "Nordeste", "Centro-Oeste", "Norte", "LATAM"];
+export const ICP_ROLES = [
+  "CEO",
+  "CRO",
+  "Head de Vendas",
+  "Diretor Comercial",
+  "Gerente Comercial",
+  "Head de RevOps",
+];
+export const ICP_SENIORITY = ["C-level", "Diretoria", "Gerência", "Coordenação"];
+export const ICP_PAINS = [
+  "Time comercial sem processo",
+  "CAC alto",
+  "Pipeline irregular",
+  "Ciclo de venda longo demais",
+  "Baixa taxa de conversão",
+  "Dependência do fundador para vender",
+];
+export const ICP_TRIGGERS = [
+  "Contratou SDR",
+  "Abriu vaga comercial",
+  "Trocou liderança de vendas",
+  "Rodada de investimento",
+  "Expansão geográfica",
+  "Lançou novo produto",
+];
+
+const ICP_KEY = "gs.icp.v1";
+
+export function loadICP(): ICPProfile {
+  if (typeof window === "undefined") return DEFAULT_ICP;
+  try {
+    const raw = window.localStorage.getItem(ICP_KEY);
+    if (!raw) return DEFAULT_ICP;
+    return { ...DEFAULT_ICP, ...JSON.parse(raw) };
+  } catch {
+    return DEFAULT_ICP;
+  }
+}
+
+export function saveICP(icp: ICPProfile) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(ICP_KEY, JSON.stringify(icp));
+}
+
+
