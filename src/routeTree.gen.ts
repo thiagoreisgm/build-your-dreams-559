@@ -22,6 +22,7 @@ import { Route as AuthenticatedIntegracoesRouteImport } from './routes/_authenti
 import { Route as AuthenticatedIcpRouteImport } from './routes/_authenticated/icp'
 import { Route as AuthenticatedFunilRouteImport } from './routes/_authenticated/funil'
 import { Route as AuthenticatedConteudoRouteImport } from './routes/_authenticated/conteudo'
+import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedCadenciasRouteImport } from './routes/_authenticated/cadencias'
 
 const AuthRoute = AuthRouteImport.update({
@@ -91,6 +92,12 @@ const AuthenticatedConteudoRoute = AuthenticatedConteudoRouteImport.update({
   path: '/conteudo',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedConfiguracoesRoute =
+  AuthenticatedConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCadenciasRoute = AuthenticatedCadenciasRouteImport.update({
   id: '/cadencias',
   path: '/cadencias',
@@ -101,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/cadencias': typeof AuthenticatedCadenciasRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/conteudo': typeof AuthenticatedConteudoRoute
   '/funil': typeof AuthenticatedFunilRoute
   '/icp': typeof AuthenticatedIcpRoute
@@ -115,6 +123,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cadencias': typeof AuthenticatedCadenciasRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/conteudo': typeof AuthenticatedConteudoRoute
   '/funil': typeof AuthenticatedFunilRoute
   '/icp': typeof AuthenticatedIcpRoute
@@ -132,6 +141,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/cadencias': typeof AuthenticatedCadenciasRoute
+  '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/conteudo': typeof AuthenticatedConteudoRoute
   '/_authenticated/funil': typeof AuthenticatedFunilRoute
   '/_authenticated/icp': typeof AuthenticatedIcpRoute
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/cadencias'
+    | '/configuracoes'
     | '/conteudo'
     | '/funil'
     | '/icp'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
   to:
     | '/auth'
     | '/cadencias'
+    | '/configuracoes'
     | '/conteudo'
     | '/funil'
     | '/icp'
@@ -180,6 +192,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/cadencias'
+    | '/_authenticated/configuracoes'
     | '/_authenticated/conteudo'
     | '/_authenticated/funil'
     | '/_authenticated/icp'
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConteudoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/configuracoes': {
+      id: '/_authenticated/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AuthenticatedConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/cadencias': {
       id: '/_authenticated/cadencias'
       path: '/cadencias'
@@ -303,6 +323,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCadenciasRoute: typeof AuthenticatedCadenciasRoute
+  AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedConteudoRoute: typeof AuthenticatedConteudoRoute
   AuthenticatedFunilRoute: typeof AuthenticatedFunilRoute
   AuthenticatedIcpRoute: typeof AuthenticatedIcpRoute
@@ -318,6 +339,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCadenciasRoute: AuthenticatedCadenciasRoute,
+  AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedConteudoRoute: AuthenticatedConteudoRoute,
   AuthenticatedFunilRoute: AuthenticatedFunilRoute,
   AuthenticatedIcpRoute: AuthenticatedIcpRoute,
