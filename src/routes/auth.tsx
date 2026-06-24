@@ -47,12 +47,13 @@ export { translateAuthError };
 
 function AuthPage() {
   const { redirect: redirectParam } = Route.useSearch();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
 
   // Only allow same-origin internal paths to avoid open-redirect.
   function safeRedirect(raw: string | undefined): string {
