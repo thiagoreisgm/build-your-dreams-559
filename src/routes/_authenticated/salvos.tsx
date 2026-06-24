@@ -1,10 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowDownAZ, ArrowUpAZ, Copy, Search, Star, Trash2 } from "lucide-react";
 import { GSPage } from "@/components/gs/page";
 import { useOpenComposer } from "@/components/gs/composer-context";
-import { loadSavedPosts, toggleSavedPost, type SavedViralPost } from "@/lib/gs-storage";
-import { MOCK_VIRAL_POSTS, type ViralPost } from "@/lib/viral-posts";
+import {
+  fetchInspirationsByIds,
+  fetchSavedInspirationIds,
+  toggleSavedInspiration,
+  type Inspiration,
+} from "@/lib/library";
 
 export const Route = createFileRoute("/_authenticated/salvos")({
   head: () => ({
@@ -19,52 +24,64 @@ export const Route = createFileRoute("/_authenticated/salvos")({
 type SortKey = "recent" | "oldest" | "engagement";
 
 function SalvosPage() {
-  const [saved, setSaved] = useState<SavedViralPost[]>([]);
+  const qc = useQueryClient();
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortKey>("recent");
   const openComposer = useOpenComposer();
 
-  useEffect(() => {
-    setSaved(loadSavedPosts());
-  }, []);
+  const savedQuery = useQuery({
+    queryKey: ["saved-inspirations"],
+    queryFn: fetchSavedInspirationIds,
+  });
+  const savedIds = useMemo(() => (savedQuery.data ?? []).map((s) => s.id), [savedQuery.data]);
+  const savedAtById = useMemo(() => {
+    const m = new Map<string, string>();
+    (savedQuery.data ?? []).forEach((s) => m.set(s.id, s.saved_at));
+    return m;
+  }, [savedQuery.data]);
 
-  function onRemove(postId: string) {
-    setSaved(toggleSavedPost(postId));
+  const detailsQuery = useQuery({
+    queryKey: ["inspirations-by-ids", savedIds],
+    queryFn: () => fetchInspirationsByIds(savedIds),
+    enabled: savedQuery.isSuccess,
+  });
+
+  async function onRemove(postId: string) {
+    await toggleSavedInspiration(postId);
+    qc.invalidateQueries({ queryKey: ["saved-inspirations"] });
   }
 
-  function onCopy(p: ViralPost) {
-    void navigator.clipboard?.writeText(p.text);
+  function onCopy(p: Inspiration) {
+    void navigator.clipboard?.writeText(p.content);
   }
 
   const items = useMemo(() => {
-    const joined = saved
-      .map((s) => {
-        const post = MOCK_VIRAL_POSTS.find((p) => p.id === s.post_id);
-        return post ? { ...post, saved_at: s.saved_at } : null;
-      })
-      .filter((x): x is ViralPost & { saved_at: string } => x !== null);
-
+    const list = (detailsQuery.data ?? []).map((p) => ({
+      ...p,
+      saved_at: savedAtById.get(p.id) ?? p.created_at,
+    }));
     const q = query.trim().toLowerCase();
     const filtered = q
-      ? joined.filter(
+      ? list.filter(
           (p) =>
-            p.text.toLowerCase().includes(q) ||
-            p.author.toLowerCase().includes(q) ||
-            p.structure.toLowerCase().includes(q),
+            p.content.toLowerCase().includes(q) ||
+            (p.author ?? "").toLowerCase().includes(q) ||
+            (p.format ?? "").toLowerCase().includes(q),
         )
-      : joined;
-
-    const sorted = [...filtered].sort((a, b) => {
+      : list;
+    return [...filtered].sort((a, b) => {
       if (sort === "recent") return b.saved_at.localeCompare(a.saved_at);
       if (sort === "oldest") return a.saved_at.localeCompare(b.saved_at);
-      return b.likes + b.comments - (a.likes + a.comments);
+      const aEng = (a.metrics?.likes ?? 0) + (a.metrics?.comments ?? 0);
+      const bEng = (b.metrics?.likes ?? 0) + (b.metrics?.comments ?? 0);
+      return bEng - aEng;
     });
-    return sorted;
-  }, [saved, query, sort]);
+  }, [detailsQuery.data, savedAtById, query, sort]);
+
+  const total = savedIds.length;
 
   return (
     <GSPage>
-      {/* Cabeçalho */}
       <div className="mb-6 flex items-center justify-between gap-4">
         <div>
           <div className="mb-1 flex items-center gap-2 text-[var(--color-orange)]">
@@ -73,7 +90,7 @@ function SalvosPage() {
           </div>
           <h2 className="font-head text-2xl font-bold tracking-tight">Posts Salvos</h2>
           <p className="mt-1 text-[13px] text-[var(--color-sub)]">
-            {saved.length} {saved.length === 1 ? "post salvo" : "posts salvos"} para inspirar suas próximas criações.
+            {total} {total === 1 ? "post salvo" : "posts salvos"} para inspirar suas próximas criações.
           </p>
         </div>
         <Link
@@ -84,7 +101,6 @@ function SalvosPage() {
         </Link>
       </div>
 
-      {/* Busca + ordenação */}
       <div className="mb-6 flex flex-wrap gap-3">
         <div className="relative min-w-[260px] flex-1">
           <Search
@@ -94,7 +110,7 @@ function SalvosPage() {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por texto, autor ou estrutura"
+            placeholder="Buscar por texto, autor ou formato"
             className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] py-2.5 pr-4 pl-10 text-sm outline-none placeholder:text-[var(--color-muted)] focus:border-[var(--color-faint)]"
           />
         </div>
@@ -111,14 +127,15 @@ function SalvosPage() {
         </div>
       </div>
 
-      {/* Lista */}
-      {items.length === 0 ? (
+      {savedQuery.isLoading || detailsQuery.isLoading ? (
+        <div className="rounded-2xl border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-16 text-center text-sm text-[var(--color-sub)]">
+          Carregando…
+        </div>
+      ) : items.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-16 text-center">
           <Star className="mx-auto mb-3 h-6 w-6 text-[var(--color-muted)]" strokeWidth={1.4} />
           <p className="text-sm text-[var(--color-sub)]">
-            {query
-              ? "Nenhum post salvo bate com essa busca."
-              : "Você ainda não salvou nenhum post."}
+            {query ? "Nenhum post salvo bate com essa busca." : "Você ainda não salvou nenhum post."}
           </p>
           {!query && (
             <Link
@@ -138,15 +155,17 @@ function SalvosPage() {
             >
               <div className="mb-4 flex items-center gap-2.5">
                 <div className="h-8 w-8 shrink-0 rounded-full bg-[var(--color-elevated)]" />
-                <span className="text-[13px] font-medium">{p.author}</span>
-                <span className="ml-auto rounded-full border border-[var(--color-border)] px-2 py-0.5 text-[10px] text-[var(--color-muted)]">
-                  {p.structure}
-                </span>
+                <span className="text-[13px] font-medium">{p.author ?? "—"}</span>
+                {p.format && (
+                  <span className="ml-auto rounded-full border border-[var(--color-border)] px-2 py-0.5 text-[10px] text-[var(--color-muted)]">
+                    {p.format}
+                  </span>
+                )}
               </div>
-              <p className="flex-1 text-[13px] leading-relaxed text-[var(--color-sub)]">{p.text}</p>
+              <p className="flex-1 text-[13px] leading-relaxed text-[var(--color-sub)]">{p.content}</p>
               <div className="mt-4 flex items-center justify-between border-t border-[var(--color-border)] pt-4 text-xs">
                 <span className="text-[var(--color-muted)]">
-                  Salvo {formatRelative(p.saved_at)} · {p.likes} ♥
+                  Salvo {formatRelative(p.saved_at)} · {p.metrics?.likes ?? 0} ♥
                 </span>
                 <div className="flex items-center gap-1">
                   <button
