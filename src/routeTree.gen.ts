@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedSinaisRouteImport } from './routes/_authenticated/sinais'
 import { Route as AuthenticatedSalvosRouteImport } from './routes/_authenticated/salvos'
@@ -22,71 +24,82 @@ import { Route as AuthenticatedFunilRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedConteudoRouteImport } from './routes/_authenticated/conteudo'
 import { Route as AuthenticatedCadenciasRouteImport } from './routes/_authenticated/cadencias'
 
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/_authenticated/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSinaisRoute = AuthenticatedSinaisRouteImport.update({
-  id: '/_authenticated/sinais',
+  id: '/sinais',
   path: '/sinais',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSalvosRoute = AuthenticatedSalvosRouteImport.update({
-  id: '/_authenticated/salvos',
+  id: '/salvos',
   path: '/salvos',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedRevisarRoute = AuthenticatedRevisarRouteImport.update({
-  id: '/_authenticated/revisar',
+  id: '/revisar',
   path: '/revisar',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPostsViraisRoute =
   AuthenticatedPostsViraisRouteImport.update({
-    id: '/_authenticated/posts-virais',
+    id: '/posts-virais',
     path: '/posts-virais',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedPlanejamentoRoute =
   AuthenticatedPlanejamentoRouteImport.update({
-    id: '/_authenticated/planejamento',
+    id: '/planejamento',
     path: '/planejamento',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
-  id: '/_authenticated/leads',
+  id: '/leads',
   path: '/leads',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedIntegracoesRoute =
   AuthenticatedIntegracoesRouteImport.update({
-    id: '/_authenticated/integracoes',
+    id: '/integracoes',
     path: '/integracoes',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedIcpRoute = AuthenticatedIcpRouteImport.update({
-  id: '/_authenticated/icp',
+  id: '/icp',
   path: '/icp',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedFunilRoute = AuthenticatedFunilRouteImport.update({
-  id: '/_authenticated/funil',
+  id: '/funil',
   path: '/funil',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedConteudoRoute = AuthenticatedConteudoRouteImport.update({
-  id: '/_authenticated/conteudo',
+  id: '/conteudo',
   path: '/conteudo',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCadenciasRoute = AuthenticatedCadenciasRouteImport.update({
-  id: '/_authenticated/cadencias',
+  id: '/cadencias',
   path: '/cadencias',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof AuthenticatedIndexRoute
+  '/auth': typeof AuthRoute
   '/cadencias': typeof AuthenticatedCadenciasRoute
   '/conteudo': typeof AuthenticatedConteudoRoute
   '/funil': typeof AuthenticatedFunilRoute
@@ -98,9 +111,9 @@ export interface FileRoutesByFullPath {
   '/revisar': typeof AuthenticatedRevisarRoute
   '/salvos': typeof AuthenticatedSalvosRoute
   '/sinais': typeof AuthenticatedSinaisRoute
-  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesByTo {
+  '/auth': typeof AuthRoute
   '/cadencias': typeof AuthenticatedCadenciasRoute
   '/conteudo': typeof AuthenticatedConteudoRoute
   '/funil': typeof AuthenticatedFunilRoute
@@ -116,6 +129,8 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/_authenticated/cadencias': typeof AuthenticatedCadenciasRoute
   '/_authenticated/conteudo': typeof AuthenticatedConteudoRoute
   '/_authenticated/funil': typeof AuthenticatedFunilRoute
@@ -132,6 +147,8 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
+    | '/auth'
     | '/cadencias'
     | '/conteudo'
     | '/funil'
@@ -143,9 +160,9 @@ export interface FileRouteTypes {
     | '/revisar'
     | '/salvos'
     | '/sinais'
-    | '/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/auth'
     | '/cadencias'
     | '/conteudo'
     | '/funil'
@@ -160,6 +177,8 @@ export interface FileRouteTypes {
     | '/'
   id:
     | '__root__'
+    | '/_authenticated'
+    | '/auth'
     | '/_authenticated/cadencias'
     | '/_authenticated/conteudo'
     | '/_authenticated/funil'
@@ -175,6 +194,114 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sinais': {
+      id: '/_authenticated/sinais'
+      path: '/sinais'
+      fullPath: '/sinais'
+      preLoaderRoute: typeof AuthenticatedSinaisRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/salvos': {
+      id: '/_authenticated/salvos'
+      path: '/salvos'
+      fullPath: '/salvos'
+      preLoaderRoute: typeof AuthenticatedSalvosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/revisar': {
+      id: '/_authenticated/revisar'
+      path: '/revisar'
+      fullPath: '/revisar'
+      preLoaderRoute: typeof AuthenticatedRevisarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/posts-virais': {
+      id: '/_authenticated/posts-virais'
+      path: '/posts-virais'
+      fullPath: '/posts-virais'
+      preLoaderRoute: typeof AuthenticatedPostsViraisRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/planejamento': {
+      id: '/_authenticated/planejamento'
+      path: '/planejamento'
+      fullPath: '/planejamento'
+      preLoaderRoute: typeof AuthenticatedPlanejamentoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/leads': {
+      id: '/_authenticated/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof AuthenticatedLeadsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/integracoes': {
+      id: '/_authenticated/integracoes'
+      path: '/integracoes'
+      fullPath: '/integracoes'
+      preLoaderRoute: typeof AuthenticatedIntegracoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/icp': {
+      id: '/_authenticated/icp'
+      path: '/icp'
+      fullPath: '/icp'
+      preLoaderRoute: typeof AuthenticatedIcpRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/funil': {
+      id: '/_authenticated/funil'
+      path: '/funil'
+      fullPath: '/funil'
+      preLoaderRoute: typeof AuthenticatedFunilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/conteudo': {
+      id: '/_authenticated/conteudo'
+      path: '/conteudo'
+      fullPath: '/conteudo'
+      preLoaderRoute: typeof AuthenticatedConteudoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cadencias': {
+      id: '/_authenticated/cadencias'
+      path: '/cadencias'
+      fullPath: '/cadencias'
+      preLoaderRoute: typeof AuthenticatedCadenciasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+  }
+}
+
+interface AuthenticatedRouteRouteChildren {
   AuthenticatedCadenciasRoute: typeof AuthenticatedCadenciasRoute
   AuthenticatedConteudoRoute: typeof AuthenticatedConteudoRoute
   AuthenticatedFunilRoute: typeof AuthenticatedFunilRoute
@@ -189,96 +316,7 @@ export interface RootRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/sinais': {
-      id: '/_authenticated/sinais'
-      path: '/sinais'
-      fullPath: '/sinais'
-      preLoaderRoute: typeof AuthenticatedSinaisRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/salvos': {
-      id: '/_authenticated/salvos'
-      path: '/salvos'
-      fullPath: '/salvos'
-      preLoaderRoute: typeof AuthenticatedSalvosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/revisar': {
-      id: '/_authenticated/revisar'
-      path: '/revisar'
-      fullPath: '/revisar'
-      preLoaderRoute: typeof AuthenticatedRevisarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/posts-virais': {
-      id: '/_authenticated/posts-virais'
-      path: '/posts-virais'
-      fullPath: '/posts-virais'
-      preLoaderRoute: typeof AuthenticatedPostsViraisRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/planejamento': {
-      id: '/_authenticated/planejamento'
-      path: '/planejamento'
-      fullPath: '/planejamento'
-      preLoaderRoute: typeof AuthenticatedPlanejamentoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/leads': {
-      id: '/_authenticated/leads'
-      path: '/leads'
-      fullPath: '/leads'
-      preLoaderRoute: typeof AuthenticatedLeadsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/integracoes': {
-      id: '/_authenticated/integracoes'
-      path: '/integracoes'
-      fullPath: '/integracoes'
-      preLoaderRoute: typeof AuthenticatedIntegracoesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/icp': {
-      id: '/_authenticated/icp'
-      path: '/icp'
-      fullPath: '/icp'
-      preLoaderRoute: typeof AuthenticatedIcpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/funil': {
-      id: '/_authenticated/funil'
-      path: '/funil'
-      fullPath: '/funil'
-      preLoaderRoute: typeof AuthenticatedFunilRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/conteudo': {
-      id: '/_authenticated/conteudo'
-      path: '/conteudo'
-      fullPath: '/conteudo'
-      preLoaderRoute: typeof AuthenticatedConteudoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/cadencias': {
-      id: '/_authenticated/cadencias'
-      path: '/cadencias'
-      fullPath: '/cadencias'
-      preLoaderRoute: typeof AuthenticatedCadenciasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
-}
-
-const rootRouteChildren: RootRouteChildren = {
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCadenciasRoute: AuthenticatedCadenciasRoute,
   AuthenticatedConteudoRoute: AuthenticatedConteudoRoute,
   AuthenticatedFunilRoute: AuthenticatedFunilRoute,
@@ -291,6 +329,14 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedSalvosRoute: AuthenticatedSalvosRoute,
   AuthenticatedSinaisRoute: AuthenticatedSinaisRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

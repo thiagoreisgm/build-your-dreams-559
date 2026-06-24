@@ -11,10 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { ComposerProvider } from "../components/gs/composer-context";
-import { Sidebar } from "../components/gs/sidebar";
-import { Topbar } from "../components/gs/topbar";
-import { ComposerModal } from "../components/gs/composer-modal";
+import { supabase } from "../integrations/supabase/client";
 
 function NotFoundComponent() {
   return (
