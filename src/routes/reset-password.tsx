@@ -85,8 +85,8 @@ function ResetPasswordPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (password.length < 6) {
-      setError("A senha precisa ter pelo menos 6 caracteres.");
+    if (!evaluation.valid) {
+      setError(evaluation.firstError ?? "A senha não atende aos requisitos mínimos.");
       return;
     }
     if (password !== confirm) {
