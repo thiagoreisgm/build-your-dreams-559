@@ -15,6 +15,39 @@ export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
 });
 
+type PasswordCheck = {
+  label: string;
+  ok: boolean;
+};
+
+function evaluatePassword(pwd: string): {
+  checks: PasswordCheck[];
+  score: number;
+  strength: "fraca" | "média" | "forte";
+  valid: boolean;
+  firstError: string | null;
+} {
+  const checks: PasswordCheck[] = [
+    { label: "Pelo menos 8 caracteres", ok: pwd.length >= 8 },
+    { label: "Uma letra maiúscula (A-Z)", ok: /[A-Z]/.test(pwd) },
+    { label: "Uma letra minúscula (a-z)", ok: /[a-z]/.test(pwd) },
+    { label: "Um número (0-9)", ok: /\d/.test(pwd) },
+    { label: "Um caractere especial (!@#$…)", ok: /[^A-Za-z0-9]/.test(pwd) },
+  ];
+  const score = checks.filter((c) => c.ok).length;
+  const strength = score <= 2 ? "fraca" : score <= 4 ? "média" : "forte";
+  const firstFail = checks.find((c) => !c.ok);
+  // Exige todos os 5 requisitos para considerar válida
+  const valid = score === checks.length;
+  return {
+    checks,
+    score,
+    strength,
+    valid,
+    firstError: firstFail ? `A senha não atende aos requisitos: ${firstFail.label.toLowerCase()}.` : null,
+  };
+}
+
 function ResetPasswordPage() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
@@ -24,6 +57,8 @@ function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+
+  const evaluation = evaluatePassword(password);
 
   // O Supabase processa o token de recuperação automaticamente (detectSessionInUrl).
   // Aguardamos o onAuthStateChange para confirmar que existe uma sessão de recovery.
