@@ -60,7 +60,7 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: window.location.origin,
+            emailRedirectTo: window.location.origin + safeRedirect(redirectParam),
             data: { full_name: fullName },
           },
         });
@@ -69,7 +69,7 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       }
-      navigate({ to: "/" });
+      window.location.replace(safeRedirect(redirectParam));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro ao autenticar");
     } finally {
@@ -82,7 +82,7 @@ function AuthPage() {
     setLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+        redirect_uri: window.location.origin + safeRedirect(redirectParam),
       });
       if (result.error) {
         setError(result.error.message ?? "Erro com Google");
@@ -90,7 +90,7 @@ function AuthPage() {
         return;
       }
       if (result.redirected) return;
-      navigate({ to: "/" });
+      window.location.replace(safeRedirect(redirectParam));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro com Google");
       setLoading(false);
