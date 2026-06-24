@@ -99,6 +99,69 @@ export function toggleSavedPost(postId: string): SavedViralPost[] {
 }
 
 // ---------------------------------------------------------------------------
+// Account profile (aba Perfil) — preferências de conta/UI
+// ---------------------------------------------------------------------------
+
+export type AccountProfile = {
+  name: string;
+  timezone: string;
+  language: string;
+  theme: "dark" | "light";
+};
+
+export const DEFAULT_ACCOUNT: AccountProfile = {
+  name: "Thiago Reis",
+  timezone: "GMT-3 Brasília",
+  language: "Português (BR)",
+  theme: "dark",
+};
+
+const ACCOUNT_KEY = "gs.account.v1";
+
+export function loadAccount(): AccountProfile {
+  if (typeof window === "undefined") return DEFAULT_ACCOUNT;
+  try {
+    const raw = window.localStorage.getItem(ACCOUNT_KEY);
+    if (!raw) return DEFAULT_ACCOUNT;
+    return { ...DEFAULT_ACCOUNT, ...JSON.parse(raw) };
+  } catch {
+    return DEFAULT_ACCOUNT;
+  }
+}
+
+export function saveAccount(a: AccountProfile) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(ACCOUNT_KEY, JSON.stringify(a));
+}
+
+// ---------------------------------------------------------------------------
+// Billing (aba Cobrança) — só persistimos o e-mail de fatura no mock
+// ---------------------------------------------------------------------------
+
+export type BillingProfile = { invoice_email: string };
+export const DEFAULT_BILLING: BillingProfile = {
+  invoice_email: "financeiro@growthmachine.com.br",
+};
+const BILLING_KEY = "gs.billing.v1";
+
+export function loadBilling(): BillingProfile {
+  if (typeof window === "undefined") return DEFAULT_BILLING;
+  try {
+    const raw = window.localStorage.getItem(BILLING_KEY);
+    if (!raw) return DEFAULT_BILLING;
+    return { ...DEFAULT_BILLING, ...JSON.parse(raw) };
+  } catch {
+    return DEFAULT_BILLING;
+  }
+}
+
+export function saveBilling(b: BillingProfile) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(BILLING_KEY, JSON.stringify(b));
+}
+
+
+// ---------------------------------------------------------------------------
 // ICP profile (motor de score de leads + ângulo de mensagem)
 // Mock — mapeia 1:1 com a futura tabela `icp` (user_id, payload jsonb).
 // ---------------------------------------------------------------------------
