@@ -13,6 +13,7 @@ const TITLES: Record<string, string> = {
   "/leads": "Leads",
   "/integracoes": "Integrações",
   "/icp": "ICP",
+  "/conteudo": "Conteúdo",
 };
 
 export function Topbar() {
