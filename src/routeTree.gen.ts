@@ -9,8 +9,62 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SinaisRouteImport } from './routes/sinais'
+import { Route as RevisarRouteImport } from './routes/revisar'
+import { Route as PostsViraisRouteImport } from './routes/posts-virais'
+import { Route as PlanejamentoRouteImport } from './routes/planejamento'
+import { Route as LeadsRouteImport } from './routes/leads'
+import { Route as IntegracoesRouteImport } from './routes/integracoes'
+import { Route as IcpRouteImport } from './routes/icp'
+import { Route as FunilRouteImport } from './routes/funil'
+import { Route as CadenciasRouteImport } from './routes/cadencias'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SinaisRoute = SinaisRouteImport.update({
+  id: '/sinais',
+  path: '/sinais',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RevisarRoute = RevisarRouteImport.update({
+  id: '/revisar',
+  path: '/revisar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostsViraisRoute = PostsViraisRouteImport.update({
+  id: '/posts-virais',
+  path: '/posts-virais',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanejamentoRoute = PlanejamentoRouteImport.update({
+  id: '/planejamento',
+  path: '/planejamento',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeadsRoute = LeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntegracoesRoute = IntegracoesRouteImport.update({
+  id: '/integracoes',
+  path: '/integracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IcpRoute = IcpRouteImport.update({
+  id: '/icp',
+  path: '/icp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FunilRoute = FunilRouteImport.update({
+  id: '/funil',
+  path: '/funil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadenciasRoute = CadenciasRouteImport.update({
+  id: '/cadencias',
+  path: '/cadencias',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +73,158 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cadencias': typeof CadenciasRoute
+  '/funil': typeof FunilRoute
+  '/icp': typeof IcpRoute
+  '/integracoes': typeof IntegracoesRoute
+  '/leads': typeof LeadsRoute
+  '/planejamento': typeof PlanejamentoRoute
+  '/posts-virais': typeof PostsViraisRoute
+  '/revisar': typeof RevisarRoute
+  '/sinais': typeof SinaisRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cadencias': typeof CadenciasRoute
+  '/funil': typeof FunilRoute
+  '/icp': typeof IcpRoute
+  '/integracoes': typeof IntegracoesRoute
+  '/leads': typeof LeadsRoute
+  '/planejamento': typeof PlanejamentoRoute
+  '/posts-virais': typeof PostsViraisRoute
+  '/revisar': typeof RevisarRoute
+  '/sinais': typeof SinaisRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cadencias': typeof CadenciasRoute
+  '/funil': typeof FunilRoute
+  '/icp': typeof IcpRoute
+  '/integracoes': typeof IntegracoesRoute
+  '/leads': typeof LeadsRoute
+  '/planejamento': typeof PlanejamentoRoute
+  '/posts-virais': typeof PostsViraisRoute
+  '/revisar': typeof RevisarRoute
+  '/sinais': typeof SinaisRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/cadencias'
+    | '/funil'
+    | '/icp'
+    | '/integracoes'
+    | '/leads'
+    | '/planejamento'
+    | '/posts-virais'
+    | '/revisar'
+    | '/sinais'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/cadencias'
+    | '/funil'
+    | '/icp'
+    | '/integracoes'
+    | '/leads'
+    | '/planejamento'
+    | '/posts-virais'
+    | '/revisar'
+    | '/sinais'
+  id:
+    | '__root__'
+    | '/'
+    | '/cadencias'
+    | '/funil'
+    | '/icp'
+    | '/integracoes'
+    | '/leads'
+    | '/planejamento'
+    | '/posts-virais'
+    | '/revisar'
+    | '/sinais'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CadenciasRoute: typeof CadenciasRoute
+  FunilRoute: typeof FunilRoute
+  IcpRoute: typeof IcpRoute
+  IntegracoesRoute: typeof IntegracoesRoute
+  LeadsRoute: typeof LeadsRoute
+  PlanejamentoRoute: typeof PlanejamentoRoute
+  PostsViraisRoute: typeof PostsViraisRoute
+  RevisarRoute: typeof RevisarRoute
+  SinaisRoute: typeof SinaisRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sinais': {
+      id: '/sinais'
+      path: '/sinais'
+      fullPath: '/sinais'
+      preLoaderRoute: typeof SinaisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revisar': {
+      id: '/revisar'
+      path: '/revisar'
+      fullPath: '/revisar'
+      preLoaderRoute: typeof RevisarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/posts-virais': {
+      id: '/posts-virais'
+      path: '/posts-virais'
+      fullPath: '/posts-virais'
+      preLoaderRoute: typeof PostsViraisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planejamento': {
+      id: '/planejamento'
+      path: '/planejamento'
+      fullPath: '/planejamento'
+      preLoaderRoute: typeof PlanejamentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leads': {
+      id: '/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof LeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/integracoes': {
+      id: '/integracoes'
+      path: '/integracoes'
+      fullPath: '/integracoes'
+      preLoaderRoute: typeof IntegracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/icp': {
+      id: '/icp'
+      path: '/icp'
+      fullPath: '/icp'
+      preLoaderRoute: typeof IcpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/funil': {
+      id: '/funil'
+      path: '/funil'
+      fullPath: '/funil'
+      preLoaderRoute: typeof FunilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadencias': {
+      id: '/cadencias'
+      path: '/cadencias'
+      fullPath: '/cadencias'
+      preLoaderRoute: typeof CadenciasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +237,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CadenciasRoute: CadenciasRoute,
+  FunilRoute: FunilRoute,
+  IcpRoute: IcpRoute,
+  IntegracoesRoute: IntegracoesRoute,
+  LeadsRoute: LeadsRoute,
+  PlanejamentoRoute: PlanejamentoRoute,
+  PostsViraisRoute: PostsViraisRoute,
+  RevisarRoute: RevisarRoute,
+  SinaisRoute: SinaisRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
