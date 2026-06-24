@@ -75,6 +75,7 @@ function PostsViraisPage() {
 
   useEffect(() => {
     setProfile(loadContentProfile());
+    setSaved(new Set(loadSavedPosts().map((s) => s.post_id)));
   }, []);
 
   // Close popovers on outside click
