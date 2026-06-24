@@ -152,6 +152,40 @@ function ResetPasswordPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-2.5 text-sm outline-none placeholder:text-[var(--color-faint)] focus:border-[var(--color-orange)]"
             />
+
+            {password.length > 0 && (
+              <div className="space-y-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5">
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--color-border)]">
+                    <div
+                      className={`h-full transition-all ${
+                        evaluation.strength === "fraca"
+                          ? "w-1/3 bg-red-500"
+                          : evaluation.strength === "média"
+                            ? "w-2/3 bg-yellow-500"
+                            : "w-full bg-[var(--color-orange)]"
+                      }`}
+                    />
+                  </div>
+                  <span className="text-[11px] font-medium capitalize text-[var(--color-sub)]">
+                    {evaluation.strength}
+                  </span>
+                </div>
+                <ul className="space-y-1">
+                  {evaluation.checks.map((c) => (
+                    <li
+                      key={c.label}
+                      className={`flex items-center gap-1.5 text-[11px] ${
+                        c.ok ? "text-[var(--color-orange)]" : "text-[var(--color-faint)]"
+                      }`}
+                    >
+                      <span>{c.ok ? "✓" : "○"}</span>
+                      {c.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <input
               type="password"
               required
