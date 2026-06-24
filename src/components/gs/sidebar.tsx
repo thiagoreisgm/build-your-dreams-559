@@ -11,6 +11,7 @@ import {
   Users,
   Link2,
   Target,
+  FileText,
   type LucideIcon,
 } from "lucide-react";
 import { useOpenComposer } from "./composer-context";
@@ -39,8 +40,9 @@ const groups: { title: string; items: Item[] }[] = [
   {
     title: "Configurações",
     items: [
-      { to: "/integracoes", label: "Integrações", icon: Link2 },
+      { to: "/conteudo", label: "Conteúdo", icon: FileText },
       { to: "/icp", label: "ICP", icon: Target },
+      { to: "/integracoes", label: "Integrações", icon: Link2 },
     ],
   },
 ];
