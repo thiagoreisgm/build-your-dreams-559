@@ -84,10 +84,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "GS One: sistema operacional de conteúdo no LinkedIn + prospecção compliant para B2B brasileiro.",
       },
-      { property: "og:title", content: "GS One" },
-      { property: "og:description", content: "Conteúdo, sinal e pipeline num loop só." },
+      { property: "og:title", content: "GS One — Conteúdo + Prospecção B2B" },
+      { property: "og:description", content: "Building Blocks is a web application for constructing and managing digital content." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "GS One — Conteúdo + Prospecção B2B" },
+      { name: "description", content: "Building Blocks is a web application for constructing and managing digital content." },
+      { name: "twitter:description", content: "Building Blocks is a web application for constructing and managing digital content." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/855e4b9e-1cd9-4c28-b97e-a98c48bc67c1/id-preview-585d3c70--6d917630-dde7-4c11-b714-ae55ed06d983.lovable.app-1782319706190.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/855e4b9e-1cd9-4c28-b97e-a98c48bc67c1/id-preview-585d3c70--6d917630-dde7-4c11-b714-ae55ed06d983.lovable.app-1782319706190.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
