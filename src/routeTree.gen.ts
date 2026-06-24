@@ -17,6 +17,7 @@ import { Route as LeadsRouteImport } from './routes/leads'
 import { Route as IntegracoesRouteImport } from './routes/integracoes'
 import { Route as IcpRouteImport } from './routes/icp'
 import { Route as FunilRouteImport } from './routes/funil'
+import { Route as ConteudoRouteImport } from './routes/conteudo'
 import { Route as CadenciasRouteImport } from './routes/cadencias'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -60,6 +61,11 @@ const FunilRoute = FunilRouteImport.update({
   path: '/funil',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConteudoRoute = ConteudoRouteImport.update({
+  id: '/conteudo',
+  path: '/conteudo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CadenciasRoute = CadenciasRouteImport.update({
   id: '/cadencias',
   path: '/cadencias',
@@ -74,6 +80,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cadencias': typeof CadenciasRoute
+  '/conteudo': typeof ConteudoRoute
   '/funil': typeof FunilRoute
   '/icp': typeof IcpRoute
   '/integracoes': typeof IntegracoesRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadencias': typeof CadenciasRoute
+  '/conteudo': typeof ConteudoRoute
   '/funil': typeof FunilRoute
   '/icp': typeof IcpRoute
   '/integracoes': typeof IntegracoesRoute
@@ -99,6 +107,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cadencias': typeof CadenciasRoute
+  '/conteudo': typeof ConteudoRoute
   '/funil': typeof FunilRoute
   '/icp': typeof IcpRoute
   '/integracoes': typeof IntegracoesRoute
@@ -113,6 +122,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cadencias'
+    | '/conteudo'
     | '/funil'
     | '/icp'
     | '/integracoes'
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cadencias'
+    | '/conteudo'
     | '/funil'
     | '/icp'
     | '/integracoes'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/cadencias'
+    | '/conteudo'
     | '/funil'
     | '/icp'
     | '/integracoes'
@@ -150,6 +162,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CadenciasRoute: typeof CadenciasRoute
+  ConteudoRoute: typeof ConteudoRoute
   FunilRoute: typeof FunilRoute
   IcpRoute: typeof IcpRoute
   IntegracoesRoute: typeof IntegracoesRoute
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FunilRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/conteudo': {
+      id: '/conteudo'
+      path: '/conteudo'
+      fullPath: '/conteudo'
+      preLoaderRoute: typeof ConteudoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cadencias': {
       id: '/cadencias'
       path: '/cadencias'
@@ -238,6 +258,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CadenciasRoute: CadenciasRoute,
+  ConteudoRoute: ConteudoRoute,
   FunilRoute: FunilRoute,
   IcpRoute: IcpRoute,
   IntegracoesRoute: IntegracoesRoute,
