@@ -24,15 +24,11 @@ function translateAuthError(err: unknown): string {
   if (msg.includes("invalid login credentials") || msg.includes("invalid credentials"))
     return "E-mail ou senha incorretos.";
   if (msg.includes("password should be at least") || msg.includes("password is too short"))
-    return "A senha precisa ter pelo menos 6 caracteres.";
+    return "A senha precisa ter pelo menos 8 caracteres.";
   if (msg.includes("password") && msg.includes("weak"))
-    return "Senha muito fraca. Use letras, números e ao menos 8 caracteres.";
-  if (msg.includes("user already registered") || msg.includes("already registered"))
-    return "Já existe uma conta com esse e-mail. Faça login.";
+    return "Senha muito fraca. Use pelo menos 8 caracteres com letras, números e símbolos.";
   if (msg.includes("email not confirmed"))
     return "Confirme seu e-mail antes de entrar.";
-  if (msg.includes("user not found"))
-    return "Não encontramos uma conta com esse e-mail.";
   if (msg.includes("same password"))
     return "A nova senha precisa ser diferente da anterior.";
   if (msg.includes("invalid email")) return "E-mail inválido.";
