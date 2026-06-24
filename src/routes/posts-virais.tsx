@@ -125,12 +125,8 @@ function PostsViraisPage() {
   }
 
   function onSave(p: ViralPost) {
-    setSaved((s) => {
-      const next = new Set(s);
-      if (next.has(p.id)) next.delete(p.id);
-      else next.add(p.id);
-      return next;
-    });
+    const next = toggleSavedPost(p.id);
+    setSaved(new Set(next.map((s) => s.post_id)));
     setOpenMenu(null);
   }
 
