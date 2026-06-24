@@ -70,7 +70,7 @@ function AuthPage() {
       }
       window.location.replace(safeRedirect(redirectParam));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao autenticar");
+      setError(translateAuthError(err));
     } finally {
       setLoading(false);
     }
