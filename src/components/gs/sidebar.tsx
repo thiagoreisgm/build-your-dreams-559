@@ -1,4 +1,6 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutGrid,
   PencilLine,
@@ -13,8 +15,10 @@ import {
   Target,
   FileText,
   Star,
+  LogOut,
   type LucideIcon,
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { useOpenComposer } from "./composer-context";
 
 type Item = { to: string; label: string; icon: LucideIcon; badge?: string };
