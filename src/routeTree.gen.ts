@@ -9,127 +9,129 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SinaisRouteImport } from './routes/sinais'
-import { Route as SalvosRouteImport } from './routes/salvos'
-import { Route as RevisarRouteImport } from './routes/revisar'
-import { Route as PostsViraisRouteImport } from './routes/posts-virais'
-import { Route as PlanejamentoRouteImport } from './routes/planejamento'
-import { Route as LeadsRouteImport } from './routes/leads'
-import { Route as IntegracoesRouteImport } from './routes/integracoes'
-import { Route as IcpRouteImport } from './routes/icp'
-import { Route as FunilRouteImport } from './routes/funil'
-import { Route as ConteudoRouteImport } from './routes/conteudo'
-import { Route as CadenciasRouteImport } from './routes/cadencias'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedSinaisRouteImport } from './routes/_authenticated/sinais'
+import { Route as AuthenticatedSalvosRouteImport } from './routes/_authenticated/salvos'
+import { Route as AuthenticatedRevisarRouteImport } from './routes/_authenticated/revisar'
+import { Route as AuthenticatedPostsViraisRouteImport } from './routes/_authenticated/posts-virais'
+import { Route as AuthenticatedPlanejamentoRouteImport } from './routes/_authenticated/planejamento'
+import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated/leads'
+import { Route as AuthenticatedIntegracoesRouteImport } from './routes/_authenticated/integracoes'
+import { Route as AuthenticatedIcpRouteImport } from './routes/_authenticated/icp'
+import { Route as AuthenticatedFunilRouteImport } from './routes/_authenticated/funil'
+import { Route as AuthenticatedConteudoRouteImport } from './routes/_authenticated/conteudo'
+import { Route as AuthenticatedCadenciasRouteImport } from './routes/_authenticated/cadencias'
 
-const SinaisRoute = SinaisRouteImport.update({
-  id: '/sinais',
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/_authenticated/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedSinaisRoute = AuthenticatedSinaisRouteImport.update({
+  id: '/_authenticated/sinais',
   path: '/sinais',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SalvosRoute = SalvosRouteImport.update({
-  id: '/salvos',
+const AuthenticatedSalvosRoute = AuthenticatedSalvosRouteImport.update({
+  id: '/_authenticated/salvos',
   path: '/salvos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RevisarRoute = RevisarRouteImport.update({
-  id: '/revisar',
+const AuthenticatedRevisarRoute = AuthenticatedRevisarRouteImport.update({
+  id: '/_authenticated/revisar',
   path: '/revisar',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PostsViraisRoute = PostsViraisRouteImport.update({
-  id: '/posts-virais',
-  path: '/posts-virais',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlanejamentoRoute = PlanejamentoRouteImport.update({
-  id: '/planejamento',
-  path: '/planejamento',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LeadsRoute = LeadsRouteImport.update({
-  id: '/leads',
+const AuthenticatedPostsViraisRoute =
+  AuthenticatedPostsViraisRouteImport.update({
+    id: '/_authenticated/posts-virais',
+    path: '/posts-virais',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedPlanejamentoRoute =
+  AuthenticatedPlanejamentoRouteImport.update({
+    id: '/_authenticated/planejamento',
+    path: '/planejamento',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
+  id: '/_authenticated/leads',
   path: '/leads',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IntegracoesRoute = IntegracoesRouteImport.update({
-  id: '/integracoes',
-  path: '/integracoes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IcpRoute = IcpRouteImport.update({
-  id: '/icp',
+const AuthenticatedIntegracoesRoute =
+  AuthenticatedIntegracoesRouteImport.update({
+    id: '/_authenticated/integracoes',
+    path: '/integracoes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedIcpRoute = AuthenticatedIcpRouteImport.update({
+  id: '/_authenticated/icp',
   path: '/icp',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FunilRoute = FunilRouteImport.update({
-  id: '/funil',
+const AuthenticatedFunilRoute = AuthenticatedFunilRouteImport.update({
+  id: '/_authenticated/funil',
   path: '/funil',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ConteudoRoute = ConteudoRouteImport.update({
-  id: '/conteudo',
+const AuthenticatedConteudoRoute = AuthenticatedConteudoRouteImport.update({
+  id: '/_authenticated/conteudo',
   path: '/conteudo',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CadenciasRoute = CadenciasRouteImport.update({
-  id: '/cadencias',
+const AuthenticatedCadenciasRoute = AuthenticatedCadenciasRouteImport.update({
+  id: '/_authenticated/cadencias',
   path: '/cadencias',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/cadencias': typeof CadenciasRoute
-  '/conteudo': typeof ConteudoRoute
-  '/funil': typeof FunilRoute
-  '/icp': typeof IcpRoute
-  '/integracoes': typeof IntegracoesRoute
-  '/leads': typeof LeadsRoute
-  '/planejamento': typeof PlanejamentoRoute
-  '/posts-virais': typeof PostsViraisRoute
-  '/revisar': typeof RevisarRoute
-  '/salvos': typeof SalvosRoute
-  '/sinais': typeof SinaisRoute
+  '/cadencias': typeof AuthenticatedCadenciasRoute
+  '/conteudo': typeof AuthenticatedConteudoRoute
+  '/funil': typeof AuthenticatedFunilRoute
+  '/icp': typeof AuthenticatedIcpRoute
+  '/integracoes': typeof AuthenticatedIntegracoesRoute
+  '/leads': typeof AuthenticatedLeadsRoute
+  '/planejamento': typeof AuthenticatedPlanejamentoRoute
+  '/posts-virais': typeof AuthenticatedPostsViraisRoute
+  '/revisar': typeof AuthenticatedRevisarRoute
+  '/salvos': typeof AuthenticatedSalvosRoute
+  '/sinais': typeof AuthenticatedSinaisRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/cadencias': typeof CadenciasRoute
-  '/conteudo': typeof ConteudoRoute
-  '/funil': typeof FunilRoute
-  '/icp': typeof IcpRoute
-  '/integracoes': typeof IntegracoesRoute
-  '/leads': typeof LeadsRoute
-  '/planejamento': typeof PlanejamentoRoute
-  '/posts-virais': typeof PostsViraisRoute
-  '/revisar': typeof RevisarRoute
-  '/salvos': typeof SalvosRoute
-  '/sinais': typeof SinaisRoute
+  '/cadencias': typeof AuthenticatedCadenciasRoute
+  '/conteudo': typeof AuthenticatedConteudoRoute
+  '/funil': typeof AuthenticatedFunilRoute
+  '/icp': typeof AuthenticatedIcpRoute
+  '/integracoes': typeof AuthenticatedIntegracoesRoute
+  '/leads': typeof AuthenticatedLeadsRoute
+  '/planejamento': typeof AuthenticatedPlanejamentoRoute
+  '/posts-virais': typeof AuthenticatedPostsViraisRoute
+  '/revisar': typeof AuthenticatedRevisarRoute
+  '/salvos': typeof AuthenticatedSalvosRoute
+  '/sinais': typeof AuthenticatedSinaisRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/cadencias': typeof CadenciasRoute
-  '/conteudo': typeof ConteudoRoute
-  '/funil': typeof FunilRoute
-  '/icp': typeof IcpRoute
-  '/integracoes': typeof IntegracoesRoute
-  '/leads': typeof LeadsRoute
-  '/planejamento': typeof PlanejamentoRoute
-  '/posts-virais': typeof PostsViraisRoute
-  '/revisar': typeof RevisarRoute
-  '/salvos': typeof SalvosRoute
-  '/sinais': typeof SinaisRoute
+  '/_authenticated/cadencias': typeof AuthenticatedCadenciasRoute
+  '/_authenticated/conteudo': typeof AuthenticatedConteudoRoute
+  '/_authenticated/funil': typeof AuthenticatedFunilRoute
+  '/_authenticated/icp': typeof AuthenticatedIcpRoute
+  '/_authenticated/integracoes': typeof AuthenticatedIntegracoesRoute
+  '/_authenticated/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/planejamento': typeof AuthenticatedPlanejamentoRoute
+  '/_authenticated/posts-virais': typeof AuthenticatedPostsViraisRoute
+  '/_authenticated/revisar': typeof AuthenticatedRevisarRoute
+  '/_authenticated/salvos': typeof AuthenticatedSalvosRoute
+  '/_authenticated/sinais': typeof AuthenticatedSinaisRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/cadencias'
     | '/conteudo'
     | '/funil'
@@ -141,9 +143,9 @@ export interface FileRouteTypes {
     | '/revisar'
     | '/salvos'
     | '/sinais'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/cadencias'
     | '/conteudo'
     | '/funil'
@@ -155,139 +157,140 @@ export interface FileRouteTypes {
     | '/revisar'
     | '/salvos'
     | '/sinais'
+    | '/'
   id:
     | '__root__'
-    | '/'
-    | '/cadencias'
-    | '/conteudo'
-    | '/funil'
-    | '/icp'
-    | '/integracoes'
-    | '/leads'
-    | '/planejamento'
-    | '/posts-virais'
-    | '/revisar'
-    | '/salvos'
-    | '/sinais'
+    | '/_authenticated/cadencias'
+    | '/_authenticated/conteudo'
+    | '/_authenticated/funil'
+    | '/_authenticated/icp'
+    | '/_authenticated/integracoes'
+    | '/_authenticated/leads'
+    | '/_authenticated/planejamento'
+    | '/_authenticated/posts-virais'
+    | '/_authenticated/revisar'
+    | '/_authenticated/salvos'
+    | '/_authenticated/sinais'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  CadenciasRoute: typeof CadenciasRoute
-  ConteudoRoute: typeof ConteudoRoute
-  FunilRoute: typeof FunilRoute
-  IcpRoute: typeof IcpRoute
-  IntegracoesRoute: typeof IntegracoesRoute
-  LeadsRoute: typeof LeadsRoute
-  PlanejamentoRoute: typeof PlanejamentoRoute
-  PostsViraisRoute: typeof PostsViraisRoute
-  RevisarRoute: typeof RevisarRoute
-  SalvosRoute: typeof SalvosRoute
-  SinaisRoute: typeof SinaisRoute
+  AuthenticatedCadenciasRoute: typeof AuthenticatedCadenciasRoute
+  AuthenticatedConteudoRoute: typeof AuthenticatedConteudoRoute
+  AuthenticatedFunilRoute: typeof AuthenticatedFunilRoute
+  AuthenticatedIcpRoute: typeof AuthenticatedIcpRoute
+  AuthenticatedIntegracoesRoute: typeof AuthenticatedIntegracoesRoute
+  AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
+  AuthenticatedPlanejamentoRoute: typeof AuthenticatedPlanejamentoRoute
+  AuthenticatedPostsViraisRoute: typeof AuthenticatedPostsViraisRoute
+  AuthenticatedRevisarRoute: typeof AuthenticatedRevisarRoute
+  AuthenticatedSalvosRoute: typeof AuthenticatedSalvosRoute
+  AuthenticatedSinaisRoute: typeof AuthenticatedSinaisRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sinais': {
-      id: '/sinais'
-      path: '/sinais'
-      fullPath: '/sinais'
-      preLoaderRoute: typeof SinaisRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/salvos': {
-      id: '/salvos'
-      path: '/salvos'
-      fullPath: '/salvos'
-      preLoaderRoute: typeof SalvosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/revisar': {
-      id: '/revisar'
-      path: '/revisar'
-      fullPath: '/revisar'
-      preLoaderRoute: typeof RevisarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/posts-virais': {
-      id: '/posts-virais'
-      path: '/posts-virais'
-      fullPath: '/posts-virais'
-      preLoaderRoute: typeof PostsViraisRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/planejamento': {
-      id: '/planejamento'
-      path: '/planejamento'
-      fullPath: '/planejamento'
-      preLoaderRoute: typeof PlanejamentoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/leads': {
-      id: '/leads'
-      path: '/leads'
-      fullPath: '/leads'
-      preLoaderRoute: typeof LeadsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/integracoes': {
-      id: '/integracoes'
-      path: '/integracoes'
-      fullPath: '/integracoes'
-      preLoaderRoute: typeof IntegracoesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/icp': {
-      id: '/icp'
-      path: '/icp'
-      fullPath: '/icp'
-      preLoaderRoute: typeof IcpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/funil': {
-      id: '/funil'
-      path: '/funil'
-      fullPath: '/funil'
-      preLoaderRoute: typeof FunilRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/conteudo': {
-      id: '/conteudo'
-      path: '/conteudo'
-      fullPath: '/conteudo'
-      preLoaderRoute: typeof ConteudoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cadencias': {
-      id: '/cadencias'
-      path: '/cadencias'
-      fullPath: '/cadencias'
-      preLoaderRoute: typeof CadenciasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/sinais': {
+      id: '/_authenticated/sinais'
+      path: '/sinais'
+      fullPath: '/sinais'
+      preLoaderRoute: typeof AuthenticatedSinaisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/salvos': {
+      id: '/_authenticated/salvos'
+      path: '/salvos'
+      fullPath: '/salvos'
+      preLoaderRoute: typeof AuthenticatedSalvosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/revisar': {
+      id: '/_authenticated/revisar'
+      path: '/revisar'
+      fullPath: '/revisar'
+      preLoaderRoute: typeof AuthenticatedRevisarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/posts-virais': {
+      id: '/_authenticated/posts-virais'
+      path: '/posts-virais'
+      fullPath: '/posts-virais'
+      preLoaderRoute: typeof AuthenticatedPostsViraisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/planejamento': {
+      id: '/_authenticated/planejamento'
+      path: '/planejamento'
+      fullPath: '/planejamento'
+      preLoaderRoute: typeof AuthenticatedPlanejamentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/leads': {
+      id: '/_authenticated/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof AuthenticatedLeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/integracoes': {
+      id: '/_authenticated/integracoes'
+      path: '/integracoes'
+      fullPath: '/integracoes'
+      preLoaderRoute: typeof AuthenticatedIntegracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/icp': {
+      id: '/_authenticated/icp'
+      path: '/icp'
+      fullPath: '/icp'
+      preLoaderRoute: typeof AuthenticatedIcpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/funil': {
+      id: '/_authenticated/funil'
+      path: '/funil'
+      fullPath: '/funil'
+      preLoaderRoute: typeof AuthenticatedFunilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/conteudo': {
+      id: '/_authenticated/conteudo'
+      path: '/conteudo'
+      fullPath: '/conteudo'
+      preLoaderRoute: typeof AuthenticatedConteudoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/cadencias': {
+      id: '/_authenticated/cadencias'
+      path: '/cadencias'
+      fullPath: '/cadencias'
+      preLoaderRoute: typeof AuthenticatedCadenciasRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  CadenciasRoute: CadenciasRoute,
-  ConteudoRoute: ConteudoRoute,
-  FunilRoute: FunilRoute,
-  IcpRoute: IcpRoute,
-  IntegracoesRoute: IntegracoesRoute,
-  LeadsRoute: LeadsRoute,
-  PlanejamentoRoute: PlanejamentoRoute,
-  PostsViraisRoute: PostsViraisRoute,
-  RevisarRoute: RevisarRoute,
-  SalvosRoute: SalvosRoute,
-  SinaisRoute: SinaisRoute,
+  AuthenticatedCadenciasRoute: AuthenticatedCadenciasRoute,
+  AuthenticatedConteudoRoute: AuthenticatedConteudoRoute,
+  AuthenticatedFunilRoute: AuthenticatedFunilRoute,
+  AuthenticatedIcpRoute: AuthenticatedIcpRoute,
+  AuthenticatedIntegracoesRoute: AuthenticatedIntegracoesRoute,
+  AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
+  AuthenticatedPlanejamentoRoute: AuthenticatedPlanejamentoRoute,
+  AuthenticatedPostsViraisRoute: AuthenticatedPostsViraisRoute,
+  AuthenticatedRevisarRoute: AuthenticatedRevisarRoute,
+  AuthenticatedSalvosRoute: AuthenticatedSalvosRoute,
+  AuthenticatedSinaisRoute: AuthenticatedSinaisRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
