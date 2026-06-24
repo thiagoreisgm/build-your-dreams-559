@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { GSPage } from "@/components/gs/page";
 import { useOpenComposer } from "@/components/gs/composer-context";
+
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -164,9 +165,14 @@ function Dashboard() {
           <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="font-head text-sm font-bold">Criadores de referência</h3>
-              <button className="cursor-pointer text-xs text-[var(--color-muted)] hover:text-[var(--color-sub)]">
+              <Link
+                to="/configuracoes"
+                search={{ tab: "conteudo" }}
+                className="cursor-pointer text-xs text-[var(--color-muted)] hover:text-[var(--color-sub)]"
+              >
                 Gerenciar
-              </button>
+              </Link>
+
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
               {CREATORS.map((c) => (

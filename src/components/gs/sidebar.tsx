@@ -11,13 +11,12 @@ import {
   Send,
   Filter,
   Users,
-  Link2,
-  Target,
-  FileText,
+  Settings,
   Star,
   LogOut,
   type LucideIcon,
 } from "lucide-react";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useOpenComposer } from "./composer-context";
 
@@ -44,13 +43,10 @@ const groups: { title: string; items: Item[] }[] = [
     ],
   },
   {
-    title: "Configurações",
-    items: [
-      { to: "/conteudo", label: "Conteúdo", icon: FileText },
-      { to: "/icp", label: "ICP", icon: Target },
-      { to: "/integracoes", label: "Integrações", icon: Link2 },
-    ],
+    title: "Conta",
+    items: [{ to: "/configuracoes", label: "Configurações", icon: Settings }],
   },
+
 ];
 
 export function Sidebar() {

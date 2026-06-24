@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ComingSoon } from "@/components/gs/page";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/icp")({
-  head: () => ({ meta: [{ title: "ICP — GS One" }] }),
-  component: () => <ComingSoon title="ICP" />,
+  beforeLoad: () => {
+    throw redirect({ to: "/configuracoes", search: { tab: "icp" } });
+  },
 });
