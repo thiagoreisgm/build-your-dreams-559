@@ -14,7 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      integrations: {
+        Row: {
+          access_token: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          metadata: Json
+          provider: string
+          provider_account_id: string | null
+          refresh_token: string | null
+          scope: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json
+          provider: string
+          provider_account_id?: string | null
+          refresh_token?: string | null
+          scope?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json
+          provider?: string
+          provider_account_id?: string | null
+          refresh_token?: string | null
+          scope?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          auth_provider: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          goal: string | null
+          id: string
+          niche: string | null
+          onboarding_completed: boolean
+          updated_at: string
+        }
+        Insert: {
+          auth_provider?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          goal?: string | null
+          id: string
+          niche?: string | null
+          onboarding_completed?: boolean
+          updated_at?: string
+        }
+        Update: {
+          auth_provider?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          goal?: string | null
+          id?: string
+          niche?: string | null
+          onboarding_completed?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      voice_profiles: {
+        Row: {
+          created_at: string
+          sample_posts: string | null
+          tone_chips: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          sample_posts?: string | null
+          tone_chips?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          sample_posts?: string | null
+          tone_chips?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
