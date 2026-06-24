@@ -130,11 +130,13 @@ function PostsViraisPage() {
             {personalizedSummary && <> — {personalizedSummary}</>}
           </p>
           <Link
-            to="/conteudo"
+            to="/configuracoes"
+            search={{ tab: "conteudo" }}
             className="shrink-0 cursor-pointer text-[13px] font-medium text-[var(--color-orange)] hover:underline"
           >
             Ajustar
           </Link>
+
         </div>
 
         {/* Busca + filtros */}
