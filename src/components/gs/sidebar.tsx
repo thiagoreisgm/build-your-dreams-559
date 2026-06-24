@@ -11,13 +11,12 @@ import {
   Send,
   Filter,
   Users,
-  Link2,
-  Target,
-  FileText,
+  Settings,
   Star,
   LogOut,
   type LucideIcon,
 } from "lucide-react";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useOpenComposer } from "./composer-context";
 
