@@ -123,18 +123,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      router.invalidate();
+    });
+    return () => sub.subscription.unsubscribe();
+  }, [router]);
   return (
     <QueryClientProvider client={queryClient}>
-      <ComposerProvider>
-        <div className="flex min-h-screen bg-[var(--color-bg)] text-[var(--color-ink)]">
-          <Sidebar />
-          <main className="ml-60 flex-1">
-            <Topbar />
-            <Outlet />
-          </main>
-        </div>
-        <ComposerModal />
-      </ComposerProvider>
+      <Outlet />
     </QueryClientProvider>
   );
 }
