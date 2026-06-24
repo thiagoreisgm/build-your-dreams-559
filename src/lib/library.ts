@@ -125,3 +125,40 @@ export function inspirationLangShort(language: string | null | undefined): "pt" 
   if (language.toLowerCase() === "en") return "en";
   return "other";
 }
+
+// ---------------------------------------------------------------------------
+// templates & hooks (biblioteca compartilhada)
+// ---------------------------------------------------------------------------
+
+export type Template = {
+  id: string;
+  title: string;
+  body: string;
+  format: string | null;
+  created_at: string;
+};
+
+export async function fetchTemplates(): Promise<Template[]> {
+  const { data, error } = await supabase
+    .from("templates")
+    .select("id, title, body, format, created_at")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as Template[];
+}
+
+export type Hook = {
+  id: string;
+  type: string;
+  text: string;
+  created_at: string;
+};
+
+export async function fetchHooks(): Promise<Hook[]> {
+  const { data, error } = await supabase
+    .from("hooks")
+    .select("id, type, text, created_at")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as Hook[];
+}
