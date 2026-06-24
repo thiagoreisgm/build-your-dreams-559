@@ -6,7 +6,7 @@ import { useOpenComposer } from "@/components/gs/composer-context";
 import { loadSavedPosts, toggleSavedPost, type SavedViralPost } from "@/lib/gs-storage";
 import { MOCK_VIRAL_POSTS, type ViralPost } from "@/lib/viral-posts";
 
-export const Route = createFileRoute("/salvos")({
+export const Route = createFileRoute("/_authenticated/salvos")({
   head: () => ({
     meta: [
       { title: "Posts Salvos — GS One" },

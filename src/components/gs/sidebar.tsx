@@ -1,4 +1,6 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutGrid,
   PencilLine,
@@ -13,8 +15,10 @@ import {
   Target,
   FileText,
   Star,
+  LogOut,
   type LucideIcon,
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { useOpenComposer } from "./composer-context";
 
 type Item = { to: string; label: string; icon: LucideIcon; badge?: string };
@@ -52,6 +56,31 @@ const groups: { title: string; items: Item[] }[] = [
 export function Sidebar() {
   const openComposer = useOpenComposer();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const u = data.user;
+      if (!u) return;
+      const name =
+        (u.user_metadata?.full_name as string | undefined) ??
+        (u.user_metadata?.name as string | undefined) ??
+        u.email?.split("@")[0] ??
+        "Usuário";
+      setUser({ name, email: u.email ?? "" });
+    });
+  }, []);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
 
   return (
     <aside className="fixed top-0 left-0 z-20 flex h-screen w-60 shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)]">
@@ -105,12 +134,21 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="flex items-center gap-3 border-t border-[var(--color-border)] px-5 py-4">
-        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[var(--color-orange)] to-[var(--color-gold)]" />
-        <div className="text-xs leading-tight">
-          <div className="font-semibold">Thiago Reis</div>
-          <div className="text-[var(--color-muted)]">9.999 créditos</div>
+      <div className="flex items-center gap-3 border-t border-[var(--color-border)] px-5 py-3">
+        <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-[var(--color-orange)] to-[var(--color-gold)]" />
+        <div className="min-w-0 flex-1 text-xs leading-tight">
+          <div className="truncate font-semibold">{user?.name ?? "Carregando..."}</div>
+          <div className="truncate text-[var(--color-muted)]">{user?.email ?? ""}</div>
         </div>
+        <button
+          onClick={handleSignOut}
+          disabled={signingOut}
+          title="Sair"
+          aria-label="Sair"
+          className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-[var(--color-sub)] transition hover:bg-[var(--color-elevated)] hover:text-[var(--color-orange)] disabled:opacity-50"
+        >
+          <LogOut className="h-4 w-4" strokeWidth={1.7} />
+        </button>
       </div>
     </aside>
   );

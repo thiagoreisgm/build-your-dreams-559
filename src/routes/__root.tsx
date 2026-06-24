@@ -11,10 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { ComposerProvider } from "../components/gs/composer-context";
-import { Sidebar } from "../components/gs/sidebar";
-import { Topbar } from "../components/gs/topbar";
-import { ComposerModal } from "../components/gs/composer-modal";
+import { supabase } from "../integrations/supabase/client";
 
 function NotFoundComponent() {
   return (
@@ -126,18 +123,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      router.invalidate();
+    });
+    return () => sub.subscription.unsubscribe();
+  }, [router]);
   return (
     <QueryClientProvider client={queryClient}>
-      <ComposerProvider>
-        <div className="flex min-h-screen bg-[var(--color-bg)] text-[var(--color-ink)]">
-          <Sidebar />
-          <main className="ml-60 flex-1">
-            <Topbar />
-            <Outlet />
-          </main>
-        </div>
-        <ComposerModal />
-      </ComposerProvider>
+      <Outlet />
     </QueryClientProvider>
   );
 }

@@ -12,7 +12,7 @@ import {
   type ContentProfile,
 } from "@/lib/gs-storage";
 
-export const Route = createFileRoute("/conteudo")({
+export const Route = createFileRoute("/_authenticated/conteudo")({
   head: () => ({ meta: [{ title: "Conteúdo — GS One" }] }),
   component: ConteudoPage,
 });
