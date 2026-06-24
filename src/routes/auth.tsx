@@ -18,6 +18,27 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+function translateAuthError(err: unknown): string {
+  const raw = err instanceof Error ? err.message : String(err ?? "");
+  const msg = raw.toLowerCase();
+  if (msg.includes("invalid login credentials") || msg.includes("invalid credentials"))
+    return "E-mail ou senha incorretos.";
+  if (msg.includes("password should be at least") || msg.includes("password is too short"))
+    return "A senha precisa ter pelo menos 6 caracteres.";
+  if (msg.includes("password") && msg.includes("weak"))
+    return "Senha muito fraca. Use letras, números e ao menos 8 caracteres.";
+  if (msg.includes("user already registered") || msg.includes("already registered"))
+    return "Já existe uma conta com esse e-mail. Faça login.";
+  if (msg.includes("email not confirmed"))
+    return "Confirme seu e-mail antes de entrar.";
+  if (msg.includes("invalid email")) return "E-mail inválido.";
+  if (msg.includes("rate limit") || msg.includes("too many"))
+    return "Muitas tentativas. Tente novamente em alguns minutos.";
+  if (msg.includes("network") || msg.includes("failed to fetch"))
+    return "Falha de conexão. Verifique sua internet e tente de novo.";
+  return raw || "Erro ao autenticar.";
+}
+
 function AuthPage() {
   const { redirect: redirectParam } = Route.useSearch();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
