@@ -56,9 +56,31 @@ const groups: { title: string; items: Item[] }[] = [
 export function Sidebar() {
   const openComposer = useOpenComposer();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
 
-  return (
-    <aside className="fixed top-0 left-0 z-20 flex h-screen w-60 shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)]">
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const u = data.user;
+      if (!u) return;
+      const name =
+        (u.user_metadata?.full_name as string | undefined) ??
+        (u.user_metadata?.name as string | undefined) ??
+        u.email?.split("@")[0] ??
+        "Usuário";
+      setUser({ name, email: u.email ?? "" });
+    });
+  }, []);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
       <div className="flex h-16 items-center gap-2.5 border-b border-[var(--color-border)] px-5">
         <div className="font-display flex h-7 w-7 items-center justify-center rounded-md bg-[var(--color-orange)] text-[11px] text-[var(--color-bg)]">
           GS
