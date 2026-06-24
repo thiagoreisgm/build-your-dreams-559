@@ -25,6 +25,7 @@ const groups: { title: string; items: Item[] }[] = [
     items: [
       { to: "/", label: "Dashboard", icon: LayoutGrid },
       { to: "/posts-virais", label: "Posts Virais", icon: TrendingUp },
+      { to: "/salvos", label: "Salvos", icon: Star },
       { to: "/planejamento", label: "Planejamento", icon: Calendar },
     ],
   },
