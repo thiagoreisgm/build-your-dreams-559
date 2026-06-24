@@ -77,14 +77,21 @@ function AuthPage() {
     e.preventDefault();
     setError(null);
     setInfo(null);
+
+    // Validação de senha no submit (não confiar só no atributo HTML)
+    if (mode !== "forgot" && password.length < 8) {
+      setError("A senha precisa ter pelo menos 8 caracteres.");
+      return;
+    }
+
     setLoading(true);
     try {
       if (mode === "forgot") {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        // Mensagem neutra independente do resultado para não vazar enumeração.
+        await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: window.location.origin + "/reset-password",
         });
-        if (error) throw error;
-        setInfo("Enviamos um link de redefinição para o seu e-mail. Confira a caixa de entrada (e o spam).");
+        setInfo("Se existir uma conta com esse e-mail, enviamos as instruções para redefinir a senha.");
         return;
       }
       if (mode === "signup") {
@@ -96,11 +103,13 @@ function AuthPage() {
             data: { full_name: fullName },
           },
         });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        // Não revela se o e-mail já existe — trata como sucesso aparente.
+        if (error && !/already|registered|exists/i.test(error.message)) throw error;
+        setInfo("Enviamos um e-mail de confirmação. Verifique sua caixa de entrada (e o spam).");
+        return;
       }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
       window.location.replace(safeRedirect(redirectParam));
     } catch (err) {
       setError(translateAuthError(err));
