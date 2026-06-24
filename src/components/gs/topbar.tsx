@@ -5,6 +5,7 @@ import { useOpenComposer } from "./composer-context";
 const TITLES: Record<string, string> = {
   "/": "Dashboard",
   "/posts-virais": "Posts Virais",
+  "/salvos": "Posts Salvos",
   "/planejamento": "Planejamento",
   "/sinais": "Sinais",
   "/cadencias": "Cadências",
