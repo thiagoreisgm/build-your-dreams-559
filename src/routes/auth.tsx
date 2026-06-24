@@ -211,8 +211,8 @@ function AuthPage() {
             <input
               type="password"
               required
-              minLength={6}
-              placeholder="Senha"
+              minLength={8}
+              placeholder="Senha (mín. 8 caracteres)"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-2.5 text-sm outline-none placeholder:text-[var(--color-faint)] focus:border-[var(--color-orange)]"
