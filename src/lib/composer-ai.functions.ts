@@ -45,7 +45,14 @@ export const generateComposerContent = createServerFn({ method: "POST" })
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("LOVABLE_API_KEY não configurada.");
 
-    const gateway = createLovableAiGatewayProvider(key);
+    const gateway = createOpenAICompatible({
+      name: "lovable",
+      baseURL: "https://ai.gateway.lovable.dev/v1",
+      headers: {
+        "Lovable-API-Key": key,
+        "X-Lovable-AIG-SDK": "vercel-ai-sdk",
+      },
+    });
     const prompt = buildPrompt(data.action, data.briefing, data.draft);
 
     try {
