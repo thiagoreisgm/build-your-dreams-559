@@ -178,7 +178,30 @@ export const generateComposerContent = createServerFn({ method: "POST" })
         system,
         prompt,
       });
-      return { text: result.text };
+
+      // Registra uso com service_role (dynamic import — não vazar no bundle do client).
+      const tokensIn = (result.usage as { inputTokens?: number; promptTokens?: number } | undefined)?.inputTokens
+        ?? (result.usage as { promptTokens?: number } | undefined)?.promptTokens
+        ?? null;
+      const tokensOut = (result.usage as { outputTokens?: number; completionTokens?: number } | undefined)?.outputTokens
+        ?? (result.usage as { completionTokens?: number } | undefined)?.completionTokens
+        ?? null;
+      try {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        await supabaseAdmin.from("ai_generations").insert({
+          user_id: userId,
+          action: data.action,
+          tokens_in: tokensIn,
+          tokens_out: tokensOut,
+        });
+      } catch (logErr) {
+        console.error("[composer-ai] falha ao registrar uso:", logErr);
+      }
+
+      return {
+        text: result.text,
+        usage: { used: usedCount + 1, limit: monthlyLimit },
+      };
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes("429")) {
