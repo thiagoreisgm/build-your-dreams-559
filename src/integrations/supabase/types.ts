@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_generations: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          tokens_in: number | null
+          tokens_out: number | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          tokens_in?: number | null
+          tokens_out?: number | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          tokens_in?: number | null
+          tokens_out?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       hooks: {
         Row: {
           created_at: string
@@ -145,6 +172,7 @@ export type Database = {
           full_name: string | null
           goal: string | null
           id: string
+          monthly_ai_limit: number
           niche: string | null
           onboarding_completed: boolean
           updated_at: string
@@ -156,6 +184,7 @@ export type Database = {
           full_name?: string | null
           goal?: string | null
           id: string
+          monthly_ai_limit?: number
           niche?: string | null
           onboarding_completed?: boolean
           updated_at?: string
@@ -167,6 +196,7 @@ export type Database = {
           full_name?: string | null
           goal?: string | null
           id?: string
+          monthly_ai_limit?: number
           niche?: string | null
           onboarding_completed?: boolean
           updated_at?: string
