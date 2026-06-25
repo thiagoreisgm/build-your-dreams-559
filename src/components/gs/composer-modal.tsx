@@ -181,6 +181,23 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
                     </span>
                   ))}
                 </div>
+                {(usage || limitReached) && (
+                  <div className="mt-4 flex items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-elevated)] px-3 py-2 text-[11px]">
+                    <span className={limitReached ? "text-[var(--color-orange)]" : "text-[var(--color-sub)]"}>
+                      {usage
+                        ? `${usage.used} de ${usage.limit} gerações usadas este mês`
+                        : "Limite mensal atingido"}
+                    </span>
+                    {limitReached && (
+                      <a
+                        href="/configuracoes?tab=cobranca"
+                        className="font-medium text-[var(--color-orange)] hover:underline"
+                      >
+                        Ver planos →
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="mt-5">
                 <div className="flex items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-elevated)] px-3 py-2.5">
