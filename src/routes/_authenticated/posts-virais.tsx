@@ -26,12 +26,20 @@ import {
   type Inspiration,
 } from "@/lib/library";
 
+type Tab = "exemplos" | "templates" | "hooks" | "salvos";
+const TABS: Tab[] = ["exemplos", "templates", "hooks", "salvos"];
+
+type PostsViraisSearch = { tab: Tab; format: string | null };
+
 export const Route = createFileRoute("/_authenticated/posts-virais")({
   head: () => ({ meta: [{ title: "Posts Virais — GS One" }] }),
+  validateSearch: (raw: Record<string, unknown>): PostsViraisSearch => {
+    const tab = TABS.includes(raw.tab as Tab) ? (raw.tab as Tab) : "exemplos";
+    const fmt = typeof raw.format === "string" && raw.format.length > 0 ? raw.format : null;
+    return { tab, format: fmt };
+  },
   component: PostsViraisPage,
 });
-
-type Tab = "exemplos" | "templates" | "hooks" | "salvos";
 
 const FORMAT_CHIPS: { label: string; value: string | null }[] = [
   { label: "Todos", value: null },
@@ -47,13 +55,17 @@ const FORMAT_CHIPS: { label: string; value: string | null }[] = [
 
 function PostsViraisPage() {
   const qc = useQueryClient();
-  const [tab, setTab] = useState<Tab>("exemplos");
+  const navigate = Route.useNavigate();
+  const { tab, format: formatChip } = Route.useSearch();
+  const setTab = (next: Tab) =>
+    navigate({ search: (prev) => ({ ...prev, tab: next }), replace: true });
+  const setFormatChip = (next: string | null) =>
+    navigate({ search: (prev) => ({ ...prev, format: next }), replace: true });
   const [profile, setProfile] = useState<ContentProfile | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [openAnatomy, setOpenAnatomy] = useState<Set<string>>(new Set());
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [formatChip, setFormatChip] = useState<string | null>(null);
 
   const [searchInput, setSearchInput] = useState("");
   const [applied, setApplied] = useState({
