@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   X,
   Sparkles,
@@ -26,7 +26,7 @@ import { toast } from "sonner";
 type Tab = "ia" | "rascunhos" | "midia" | "alcance";
 
 export function ComposerModal() {
-  const { open, setOpen } = useComposer();
+  const { open, setOpen, inspirationId, consumeAutoAction } = useComposer();
   const [tab, setTab] = useState<Tab>("ia");
   const [briefing, setBriefing] = useState("");
   const [loadingAction, setLoadingAction] = useState<ComposerAction | null>(null);
