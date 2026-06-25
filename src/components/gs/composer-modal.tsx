@@ -16,14 +16,21 @@ import {
   Plus,
   Activity,
   Shield,
+  Loader2,
 } from "lucide-react";
 import { useComposer } from "./composer-context";
+import { useServerFn } from "@tanstack/react-start";
+import { generateComposerContent, type ComposerAction } from "@/lib/composer-ai.functions";
+import { toast } from "sonner";
 
 type Tab = "ia" | "rascunhos" | "midia" | "alcance";
 
 export function ComposerModal() {
   const { open, setOpen } = useComposer();
   const [tab, setTab] = useState<Tab>("ia");
+  const [briefing, setBriefing] = useState("");
+  const [loadingAction, setLoadingAction] = useState<ComposerAction | null>(null);
+  const generate = useServerFn(generateComposerContent);
   const [text, setText] = useState(
     `A maioria das empresas B2B não está atrasada em IA por falta de ferramenta.
 
