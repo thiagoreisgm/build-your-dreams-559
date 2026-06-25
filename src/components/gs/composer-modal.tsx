@@ -30,6 +30,8 @@ export function ComposerModal() {
   const [tab, setTab] = useState<Tab>("ia");
   const [briefing, setBriefing] = useState("");
   const [loadingAction, setLoadingAction] = useState<ComposerAction | null>(null);
+  const [usage, setUsage] = useState<{ used: number; limit: number } | null>(null);
+  const [limitReached, setLimitReached] = useState(false);
   const generate = useServerFn(generateComposerContent);
   const [text, setText] = useState(
     `A maioria das empresas B2B não está atrasada em IA por falta de ferramenta.
@@ -57,6 +59,10 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
           ...(inspirationId ? { inspirationId } : {}),
         },
       });
+      if (res.usage) {
+        setUsage(res.usage);
+        setLimitReached(res.usage.used >= res.usage.limit);
+      }
       if (action === "improve") {
         setText(res.text);
         toast.success("Rascunho melhorado.");
@@ -71,7 +77,11 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
         );
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Falha ao gerar conteúdo.");
+      const msg = err instanceof Error ? err.message : "Falha ao gerar conteúdo.";
+      if (msg.includes("limite de") && msg.includes("gerações")) {
+        setLimitReached(true);
+      }
+      toast.error(msg);
     } finally {
       setLoadingAction(null);
     }
