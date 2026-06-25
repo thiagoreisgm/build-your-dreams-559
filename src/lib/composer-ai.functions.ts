@@ -91,8 +91,9 @@ export const generateComposerContent = createServerFn({ method: "POST" })
 
     const { supabase, userId } = context;
 
-    // Carrega voz do usuário (RLS scopa por user_id, mas filtramos explicitamente).
+    // Carrega voz do usuário + limite mensal (RLS scopa por user_id).
     let voice: VoiceCtx | null = null;
+    let monthlyLimit = 100;
     try {
       const [{ data: vp }, { data: prof }] = await Promise.all([
         supabase
@@ -100,15 +101,41 @@ export const generateComposerContent = createServerFn({ method: "POST" })
           .select("sample_posts, tone_chips")
           .eq("user_id", userId)
           .maybeSingle(),
-        supabase.from("profiles").select("niche").eq("id", userId).maybeSingle(),
+        supabase
+          .from("profiles")
+          .select("niche, monthly_ai_limit")
+          .eq("id", userId)
+          .maybeSingle(),
       ]);
       voice = {
         samplePosts: vp?.sample_posts ?? null,
         toneChips: (vp?.tone_chips ?? []) as string[],
         niche: prof?.niche ?? null,
       };
+      if (typeof prof?.monthly_ai_limit === "number") monthlyLimit = prof.monthly_ai_limit;
     } catch {
       voice = null; // cold start / falha de leitura nunca quebra a geração
+    }
+
+    // Cota mensal — conta gerações do mês corrente (UTC) via cliente autenticado.
+    const now = new Date();
+    const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString();
+    let usedCount = 0;
+    {
+      const { count, error: countErr } = await supabase
+        .from("ai_generations")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .gte("created_at", monthStart);
+      if (countErr) {
+        throw new Error("Não foi possível validar sua cota de gerações. Tente novamente.");
+      }
+      usedCount = count ?? 0;
+    }
+    if (usedCount >= monthlyLimit) {
+      throw new Error(
+        `Você atingiu o limite de ${monthlyLimit} gerações deste mês. Faça upgrade do plano para continuar.`,
+      );
     }
 
     // Estrutura opcional vinda da biblioteca.
