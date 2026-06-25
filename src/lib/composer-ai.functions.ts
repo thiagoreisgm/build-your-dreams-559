@@ -10,6 +10,7 @@ const InputSchema = z.object({
   action: z.enum(["ideas", "write_post", "hooks", "improve"]),
   briefing: z.string().max(4000).optional().default(""),
   draft: z.string().max(6000).optional().default(""),
+  inspirationId: z.string().uuid().optional(),
 });
 
 const SYSTEM_BASE = `Você é o assistente de copywriting do GS One, um SaaS de conteúdo para LinkedIn em português do Brasil.
@@ -17,14 +18,57 @@ Voz: direta, autoral, sem clichês corporativos, sem emojis, sem hashtags, sem "
 Estrutura preferida: gancho forte na primeira linha → desenvolvimento curto em parágrafos de 1-2 linhas → fechamento provocativo ou CTA sutil.
 Responda SEMPRE em português do Brasil. Entregue apenas o conteúdo pedido — sem preâmbulo, sem "claro!", sem explicações sobre o que você fez.`;
 
-function buildPrompt(action: ComposerAction, briefing: string, draft: string): string {
+type VoiceCtx = {
+  samplePosts: string | null;
+  toneChips: string[];
+  niche: string | null;
+};
+
+type StructureCtx = {
+  hook: string | null;
+  structureSteps: string[];
+  cta: string | null;
+  format: string | null;
+};
+
+function buildSystem(voice: VoiceCtx | null): string {
+  if (!voice || !voice.samplePosts?.trim()) return SYSTEM_BASE;
+  const tone = voice.toneChips.length ? voice.toneChips.join(", ") : "(não informado)";
+  const niche = voice.niche?.trim() || "(não informado)";
+  return `${SYSTEM_BASE}
+
+Imite fielmente a voz do autor. Aqui estão exemplos reais de como ele escreve — copie o ritmo, o vocabulário e o tom, mas NÃO copie o conteúdo:
+<exemplos>
+${voice.samplePosts.trim()}
+</exemplos>
+Tom desejado: ${tone}.
+Nicho do autor: ${niche}.`;
+}
+
+function buildPrompt(
+  action: ComposerAction,
+  briefing: string,
+  draft: string,
+  structure: StructureCtx | null,
+): string {
+  const structureBlock =
+    structure && (structure.hook || structure.structureSteps.length || structure.cta || structure.format)
+      ? `
+
+Siga esta ESTRUTURA comprovada (não copie o texto, só o esqueleto):
+Formato: ${structure.format ?? "(livre)"}.
+Arco: ${structure.structureSteps.length ? structure.structureSteps.join(" → ") : "(livre)"}.
+Tipo de gancho inspirado em: ${structure.hook ?? "(livre)"}.
+Tipo de CTA: ${structure.cta ?? "(sutil)"}.`
+      : "";
+
   switch (action) {
     case "ideas":
       return `Gere 5 ideias de post para LinkedIn${briefing ? ` sobre: ${briefing}` : ""}.
 Formato: lista numerada de 1 a 5. Cada item com 1 linha de tese + 1 linha de ângulo. Nada além disso.`;
     case "write_post":
       return `Escreva 1 post completo para LinkedIn${briefing ? ` sobre: ${briefing}` : ""}.
-Entre 120 e 220 palavras. Quebras de linha curtas. Sem hashtags.`;
+Entre 120 e 220 palavras. Quebras de linha curtas. Sem hashtags.${structureBlock}`;
     case "hooks":
       return `Gere 10 hooks (primeira linha de post) para LinkedIn${briefing ? ` sobre: ${briefing}` : ""}.
 Cada hook em 1 linha, no máximo 12 palavras. Sem numeração, um por linha.`;
@@ -41,9 +85,53 @@ ${draft}
 export const generateComposerContent = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => InputSchema.parse(input))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("LOVABLE_API_KEY não configurada.");
+
+    const { supabase, userId } = context;
+
+    // Carrega voz do usuário (RLS scopa por user_id, mas filtramos explicitamente).
+    let voice: VoiceCtx | null = null;
+    try {
+      const [{ data: vp }, { data: prof }] = await Promise.all([
+        supabase
+          .from("voice_profiles")
+          .select("sample_posts, tone_chips")
+          .eq("user_id", userId)
+          .maybeSingle(),
+        supabase.from("profiles").select("niche").eq("id", userId).maybeSingle(),
+      ]);
+      voice = {
+        samplePosts: vp?.sample_posts ?? null,
+        toneChips: (vp?.tone_chips ?? []) as string[],
+        niche: prof?.niche ?? null,
+      };
+    } catch {
+      voice = null; // cold start / falha de leitura nunca quebra a geração
+    }
+
+    // Estrutura opcional vinda da biblioteca.
+    let structure: StructureCtx | null = null;
+    if (data.inspirationId && data.action === "write_post") {
+      try {
+        const { data: insp } = await supabase
+          .from("inspirations")
+          .select("hook, structure_steps, cta, format")
+          .eq("id", data.inspirationId)
+          .maybeSingle();
+        if (insp) {
+          structure = {
+            hook: insp.hook ?? null,
+            structureSteps: (insp.structure_steps ?? []) as string[],
+            cta: insp.cta ?? null,
+            format: insp.format ?? null,
+          };
+        }
+      } catch {
+        structure = null;
+      }
+    }
 
     const gateway = createOpenAICompatible({
       name: "lovable",
@@ -53,18 +141,19 @@ export const generateComposerContent = createServerFn({ method: "POST" })
         "X-Lovable-AIG-SDK": "vercel-ai-sdk",
       },
     });
-    const prompt = buildPrompt(data.action, data.briefing, data.draft);
+
+    const system = buildSystem(voice);
+    const prompt = buildPrompt(data.action, data.briefing, data.draft, structure);
 
     try {
       const result = await generateText({
         model: gateway("google/gemini-3-flash-preview"),
-        system: SYSTEM_BASE,
+        system,
         prompt,
       });
       return { text: result.text };
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      // 429 = rate limit, 402 = créditos
       if (msg.includes("429")) {
         throw new Error("Muitas requisições. Aguarde alguns segundos e tente de novo.");
       }
@@ -74,4 +163,3 @@ export const generateComposerContent = createServerFn({ method: "POST" })
       throw new Error(`Falha ao gerar conteúdo: ${msg}`);
     }
   });
-
