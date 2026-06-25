@@ -41,6 +41,35 @@ Ferramenta sem método é custo. Método sem ferramenta é teoria.
 No fim, vence quem transforma demanda em processo — não em sorte.`,
   );
 
+  async function runAction(action: ComposerAction) {
+    if (loadingAction) return;
+    if (action === "improve" && !text.trim()) {
+      toast.error("Escreva um rascunho primeiro para a IA melhorar.");
+      return;
+    }
+    setLoadingAction(action);
+    try {
+      const res = await generate({ data: { action, briefing, draft: text } });
+      if (action === "improve") {
+        setText(res.text);
+        toast.success("Rascunho melhorado.");
+      } else {
+        setText((prev) => (prev.trim() ? `${prev}\n\n${res.text}` : res.text));
+        toast.success(
+          action === "ideas"
+            ? "5 ideias geradas."
+            : action === "hooks"
+              ? "10 hooks gerados."
+              : "Post gerado.",
+        );
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Falha ao gerar conteúdo.");
+    } finally {
+      setLoadingAction(null);
+    }
+  }
+
   if (!open) return null;
 
   return (
