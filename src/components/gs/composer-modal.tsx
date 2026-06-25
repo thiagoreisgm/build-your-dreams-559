@@ -16,14 +16,21 @@ import {
   Plus,
   Activity,
   Shield,
+  Loader2,
 } from "lucide-react";
 import { useComposer } from "./composer-context";
+import { useServerFn } from "@tanstack/react-start";
+import { generateComposerContent, type ComposerAction } from "@/lib/composer-ai.functions";
+import { toast } from "sonner";
 
 type Tab = "ia" | "rascunhos" | "midia" | "alcance";
 
 export function ComposerModal() {
   const { open, setOpen } = useComposer();
   const [tab, setTab] = useState<Tab>("ia");
+  const [briefing, setBriefing] = useState("");
+  const [loadingAction, setLoadingAction] = useState<ComposerAction | null>(null);
+  const generate = useServerFn(generateComposerContent);
   const [text, setText] = useState(
     `A maioria das empresas B2B não está atrasada em IA por falta de ferramenta.
 
@@ -33,6 +40,35 @@ Ferramenta sem método é custo. Método sem ferramenta é teoria.
 
 No fim, vence quem transforma demanda em processo — não em sorte.`,
   );
+
+  async function runAction(action: ComposerAction) {
+    if (loadingAction) return;
+    if (action === "improve" && !text.trim()) {
+      toast.error("Escreva um rascunho primeiro para a IA melhorar.");
+      return;
+    }
+    setLoadingAction(action);
+    try {
+      const res = await generate({ data: { action, briefing, draft: text } });
+      if (action === "improve") {
+        setText(res.text);
+        toast.success("Rascunho melhorado.");
+      } else {
+        setText((prev) => (prev.trim() ? `${prev}\n\n${res.text}` : res.text));
+        toast.success(
+          action === "ideas"
+            ? "5 ideias geradas."
+            : action === "hooks"
+              ? "10 hooks gerados."
+              : "Post gerado.",
+        );
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Falha ao gerar conteúdo.");
+    } finally {
+      setLoadingAction(null);
+    }
+  }
 
   if (!open) return null;
 
@@ -75,20 +111,30 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
                   Gere posts, hooks e respostas no seu método — não genérico.
                 </p>
                 <div className="space-y-2.5">
-                  {[
-                    { icon: Sparkles, label: "Achar ideias" },
-                    { icon: PencilLine, label: "Escrever um post" },
-                    { icon: TrendingUp, label: "Gerar 10 hooks" },
-                    { icon: Check, label: "Melhorar meu rascunho" },
-                  ].map((a) => (
-                    <button
-                      key={a.label}
-                      className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-elevated)] px-4 py-3 text-left text-[13px] transition hover:border-[var(--color-faint)]"
-                    >
-                      <a.icon className="h-[18px] w-[18px] text-[var(--color-orange)]" strokeWidth={1.6} />
-                      {a.label}
-                    </button>
-                  ))}
+                  {([
+                    { icon: Sparkles, label: "Achar ideias", action: "ideas" as const },
+                    { icon: PencilLine, label: "Escrever um post", action: "write_post" as const },
+                    { icon: TrendingUp, label: "Gerar 10 hooks", action: "hooks" as const },
+                    { icon: Check, label: "Melhorar meu rascunho", action: "improve" as const },
+                  ]).map((a) => {
+                    const isLoading = loadingAction === a.action;
+                    const disabled = loadingAction !== null;
+                    return (
+                      <button
+                        key={a.label}
+                        disabled={disabled}
+                        onClick={() => runAction(a.action)}
+                        className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-elevated)] px-4 py-3 text-left text-[13px] transition hover:border-[var(--color-faint)] disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {isLoading ? (
+                          <Loader2 className="h-[18px] w-[18px] animate-spin text-[var(--color-orange)]" strokeWidth={1.6} />
+                        ) : (
+                          <a.icon className="h-[18px] w-[18px] text-[var(--color-orange)]" strokeWidth={1.6} />
+                        )}
+                        {a.label}
+                      </button>
+                    );
+                  })}
                 </div>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {["skill: viralidade-linkedin", "hooks-dr", "copywriter-dr"].map((c) => (
@@ -104,11 +150,24 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
               <div className="mt-5">
                 <div className="flex items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-elevated)] px-3 py-2.5">
                   <input
+                    value={briefing}
+                    onChange={(e) => setBriefing(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !loadingAction) runAction("write_post");
+                    }}
                     className="flex-1 bg-transparent text-[13px] outline-none placeholder:text-[var(--color-muted)]"
-                    placeholder="Peça à IA..."
+                    placeholder="Sobre o que? (opcional)"
                   />
-                  <button className="cursor-pointer text-[var(--color-orange)]">
-                    <Send className="h-[18px] w-[18px]" strokeWidth={1.6} />
+                  <button
+                    onClick={() => runAction("write_post")}
+                    disabled={loadingAction !== null}
+                    className="cursor-pointer text-[var(--color-orange)] disabled:opacity-50"
+                  >
+                    {loadingAction ? (
+                      <Loader2 className="h-[18px] w-[18px] animate-spin" strokeWidth={1.6} />
+                    ) : (
+                      <Send className="h-[18px] w-[18px]" strokeWidth={1.6} />
+                    )}
                   </button>
                 </div>
               </div>
