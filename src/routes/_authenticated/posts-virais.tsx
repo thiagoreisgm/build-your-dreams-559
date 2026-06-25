@@ -15,7 +15,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { GSPage } from "@/components/gs/page";
-import { useOpenComposer } from "@/components/gs/composer-context";
+import { useComposer, useOpenComposer } from "@/components/gs/composer-context";
 import { loadContentProfile, type ContentProfile } from "@/lib/gs-storage";
 import {
   fetchHooks,
@@ -80,6 +80,7 @@ function PostsViraisPage() {
   const [period, setPeriod] = useState(1);
 
   const openComposer = useOpenComposer();
+  const { openWith: openComposerWith } = useComposer();
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -461,7 +462,9 @@ function PostsViraisPage() {
                                 </div>
                               )}
                               <button
-                                onClick={openComposer}
+                                onClick={() =>
+                                  openComposerWith({ inspirationId: p.id, autoAction: "write_post" })
+                                }
                                 className="mt-1 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-[var(--color-orange)] px-3 py-2 text-[12px] font-semibold text-[var(--color-bg)] transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-orange)]"
                               >
                                 <Sparkles className="h-3.5 w-3.5" strokeWidth={1.8} />
@@ -478,7 +481,9 @@ function PostsViraisPage() {
                         </span>
                         <div className="flex items-center gap-1">
                           <button
-                            onClick={openComposer}
+                            onClick={() =>
+                              openComposerWith({ inspirationId: p.id, autoAction: "write_post" })
+                            }
                             className="cursor-pointer px-2 text-[13px] font-medium text-[var(--color-orange)] hover:underline"
                           >
                             Adaptar
