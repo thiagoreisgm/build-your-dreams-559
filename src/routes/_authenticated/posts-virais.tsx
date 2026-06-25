@@ -58,9 +58,9 @@ function PostsViraisPage() {
   const navigate = Route.useNavigate();
   const { tab, format: formatChip } = Route.useSearch();
   const setTab = (next: Tab) =>
-    navigate({ search: (prev) => ({ ...prev, tab: next }), replace: true });
+    navigate({ search: (prev: PostsViraisSearch) => ({ ...prev, tab: next }), replace: true });
   const setFormatChip = (next: string | null) =>
-    navigate({ search: (prev) => ({ ...prev, format: next }), replace: true });
+    navigate({ search: (prev: PostsViraisSearch) => ({ ...prev, format: next }), replace: true });
   const [profile, setProfile] = useState<ContentProfile | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
