@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   X,
   Sparkles,
@@ -26,7 +26,7 @@ import { toast } from "sonner";
 type Tab = "ia" | "rascunhos" | "midia" | "alcance";
 
 export function ComposerModal() {
-  const { open, setOpen } = useComposer();
+  const { open, setOpen, inspirationId, consumeAutoAction } = useComposer();
   const [tab, setTab] = useState<Tab>("ia");
   const [briefing, setBriefing] = useState("");
   const [loadingAction, setLoadingAction] = useState<ComposerAction | null>(null);
@@ -49,7 +49,14 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
     }
     setLoadingAction(action);
     try {
-      const res = await generate({ data: { action, briefing, draft: text } });
+      const res = await generate({
+        data: {
+          action,
+          briefing,
+          draft: text,
+          ...(inspirationId ? { inspirationId } : {}),
+        },
+      });
       if (action === "improve") {
         setText(res.text);
         toast.success("Rascunho melhorado.");
@@ -69,6 +76,24 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
       setLoadingAction(null);
     }
   }
+
+  // Auto-dispara a ação solicitada ao abrir (ex.: "Adaptar com IA" da biblioteca).
+  const autoFiredRef = useRef(false);
+  useEffect(() => {
+    if (!open) {
+      autoFiredRef.current = false;
+      return;
+    }
+    if (autoFiredRef.current) return;
+    const pending = consumeAutoAction();
+    if (pending) {
+      autoFiredRef.current = true;
+      void runAction(pending);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+
 
   if (!open) return null;
 
