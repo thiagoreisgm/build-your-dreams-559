@@ -403,9 +403,17 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
             >
               Cancelar
             </button>
-            <button className="ml-auto flex cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--color-border)] px-4 py-2 text-[13px] text-[var(--color-sub)] hover:border-[var(--color-faint)] hover:text-[var(--color-ink)]">
-              <Plus className="h-3.5 w-3.5" strokeWidth={2} />
-              Novo rascunho
+            <button
+              onClick={saveDraft}
+              disabled={savingDraft}
+              className="ml-auto flex cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--color-border)] px-4 py-2 text-[13px] text-[var(--color-sub)] hover:border-[var(--color-faint)] hover:text-[var(--color-ink)] disabled:opacity-50"
+            >
+              {savingDraft ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={2} />
+              ) : (
+                <Plus className="h-3.5 w-3.5" strokeWidth={2} />
+              )}
+              Salvar como rascunho
             </button>
             <div className="flex overflow-hidden rounded-lg">
               <button className="cursor-pointer bg-[var(--color-orange)] px-4 py-2 text-left text-[13px] leading-tight font-semibold text-[var(--color-bg)]">
