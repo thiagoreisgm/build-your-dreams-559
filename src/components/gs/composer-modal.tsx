@@ -86,7 +86,37 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
       toast.error(msg);
     } finally {
       setLoadingAction(null);
+  }
+
+  async function saveDraft() {
+    if (savingDraft) return;
+    const content = text.trim();
+    if (!content) {
+      toast.error("Escreva algo antes de salvar.");
+      return;
     }
+    setSavingDraft(true);
+    try {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) {
+        toast.error("Sessão expirada.");
+        return;
+      }
+      const { error } = await supabase.from("posts").insert({
+        user_id: u.user.id,
+        content,
+        status: "draft",
+      });
+      if (error) {
+        toast.error("Não foi possível salvar o rascunho.");
+        return;
+      }
+      toast.success("Rascunho salvo no Planejamento.");
+      setOpen(false);
+    } finally {
+      setSavingDraft(false);
+    }
+  }
   }
 
   // Auto-dispara a ação solicitada ao abrir (ex.: "Adaptar com IA" da biblioteca).
