@@ -13,12 +13,15 @@ import {
   Users,
   Settings,
   Star,
+  Shield,
   LogOut,
   type LucideIcon,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
+import { useIsAdmin } from "@/lib/admin";
 import { useOpenComposer } from "./composer-context";
+
 
 type Item = { to: string; label: string; icon: LucideIcon; badge?: string };
 
