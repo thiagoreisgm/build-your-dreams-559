@@ -96,7 +96,7 @@ function PlanejamentoPage() {
       setScheduleModal({ postId: post.id, from });
       return;
     }
-    await updatePost(post.id, { status: to, scheduled_at: to === "scheduled" ? post.scheduled_at : null });
+    await updatePost(post.id, { status: to, scheduled_at: null });
   }
 
   return (
