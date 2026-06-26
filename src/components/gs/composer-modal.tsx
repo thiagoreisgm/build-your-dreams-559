@@ -22,6 +22,7 @@ import { useComposer } from "./composer-context";
 import { useServerFn } from "@tanstack/react-start";
 import { generateComposerContent, type ComposerAction } from "@/lib/composer-ai.functions";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 type Tab = "ia" | "rascunhos" | "midia" | "alcance";
 
