@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
 import { Plus, LayoutGrid, CalendarDays, Loader2, Clock } from "lucide-react";
 import { toast } from "sonner";
-import { Page } from "@/components/gs/page";
+import { GSPage } from "@/components/gs/page";
 import { useOpenComposer } from "@/components/gs/composer-context";
 import { supabase } from "@/integrations/supabase/client";
 import {
