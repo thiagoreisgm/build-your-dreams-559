@@ -86,7 +86,9 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
       toast.error(msg);
     } finally {
       setLoadingAction(null);
+    }
   }
+
 
   async function saveDraft() {
     if (savingDraft) return;
