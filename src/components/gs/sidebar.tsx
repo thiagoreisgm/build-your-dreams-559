@@ -133,7 +133,27 @@ export function Sidebar() {
             })}
           </div>
         ))}
+
+        {isAdmin && (
+          <div className="mt-6">
+            <p className="mb-2 px-6 text-[10px] tracking-[0.15em] text-[var(--color-faint)] uppercase">
+              Admin
+            </p>
+            <Link
+              to="/admin"
+              className={`flex w-full cursor-pointer items-center gap-3 border-l-2 py-2.5 pr-4 pl-6 text-sm transition ${
+                pathname.startsWith("/admin")
+                  ? "border-[var(--color-orange)] bg-[var(--color-surface)] text-[var(--color-orange)]"
+                  : "border-transparent text-[var(--color-sub)] hover:bg-[var(--color-surface)] hover:text-[var(--color-ink)]"
+              }`}
+            >
+              <Shield className="h-[18px] w-[18px]" strokeWidth={1.6} />
+              <span>Admin</span>
+            </Link>
+          </div>
+        )}
       </nav>
+
 
       <div className="flex items-center gap-3 border-t border-[var(--color-border)] px-5 py-3">
         <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-[var(--color-orange)] to-[var(--color-gold)]" />
