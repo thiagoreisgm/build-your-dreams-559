@@ -31,6 +31,7 @@ export function ComposerModal() {
   const [tab, setTab] = useState<Tab>("ia");
   const [briefing, setBriefing] = useState("");
   const [loadingAction, setLoadingAction] = useState<ComposerAction | null>(null);
+  const [savingDraft, setSavingDraft] = useState(false);
   const [usage, setUsage] = useState<{ used: number; limit: number } | null>(null);
   const [limitReached, setLimitReached] = useState(false);
   const generate = useServerFn(generateComposerContent);
