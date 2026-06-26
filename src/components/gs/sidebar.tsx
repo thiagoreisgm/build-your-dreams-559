@@ -57,6 +57,8 @@ export function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { isAdmin } = useIsAdmin();
+
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
   const [signingOut, setSigningOut] = useState(false);
 

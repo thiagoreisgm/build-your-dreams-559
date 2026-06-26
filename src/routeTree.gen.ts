@@ -25,6 +25,7 @@ import { Route as AuthenticatedFunilRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedConteudoRouteImport } from './routes/_authenticated/conteudo'
 import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedCadenciasRouteImport } from './routes/_authenticated/cadencias'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -109,11 +110,17 @@ const AuthenticatedCadenciasRoute = AuthenticatedCadenciasRouteImport.update({
   path: '/cadencias',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/cadencias': typeof AuthenticatedCadenciasRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/conteudo': typeof AuthenticatedConteudoRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/cadencias': typeof AuthenticatedCadenciasRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/conteudo': typeof AuthenticatedConteudoRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/cadencias': typeof AuthenticatedCadenciasRoute
   '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/conteudo': typeof AuthenticatedConteudoRoute
@@ -169,6 +178,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/admin'
     | '/cadencias'
     | '/configuracoes'
     | '/conteudo'
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
   to:
     | '/auth'
     | '/reset-password'
+    | '/admin'
     | '/cadencias'
     | '/configuracoes'
     | '/conteudo'
@@ -203,6 +214,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/admin'
     | '/_authenticated/cadencias'
     | '/_authenticated/configuracoes'
     | '/_authenticated/conteudo'
@@ -338,10 +350,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCadenciasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedCadenciasRoute: typeof AuthenticatedCadenciasRoute
   AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedConteudoRoute: typeof AuthenticatedConteudoRoute
@@ -358,6 +378,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedCadenciasRoute: AuthenticatedCadenciasRoute,
   AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedConteudoRoute: AuthenticatedConteudoRoute,
