@@ -100,7 +100,7 @@ function PlanejamentoPage() {
   }
 
   return (
-    <Page title="Planejamento" subtitle="Quadro e agenda dos seus posts.">
+    <GSPage subtitle="Quadro e agenda dos seus posts.">
       <div className="mb-6 flex items-center justify-between gap-3">
         <div className="inline-flex overflow-hidden rounded-lg border border-[var(--color-border)]">
           <ViewBtn active={view === "board"} onClick={() => setView("board")} icon={<LayoutGrid className="h-4 w-4" />}>
@@ -158,7 +158,7 @@ function PlanejamentoPage() {
           }}
         />
       )}
-    </Page>
+    </GSPage>
   );
 }
 
