@@ -101,6 +101,7 @@ function PlanejamentoPage() {
 
   return (
     <GSPage subtitle="Quadro e agenda dos seus posts.">
+      <h1 className="font-display mb-6 text-3xl text-[var(--color-ink)]">Planejamento</h1>
       <div className="mb-6 flex items-center justify-between gap-3">
         <div className="inline-flex overflow-hidden rounded-lg border border-[var(--color-border)]">
           <ViewBtn active={view === "board"} onClick={() => setView("board")} icon={<LayoutGrid className="h-4 w-4" />}>
