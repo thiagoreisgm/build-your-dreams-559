@@ -119,7 +119,7 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
       setSavingDraft(false);
     }
   }
-  }
+
 
   // Auto-dispara a ação solicitada ao abrir (ex.: "Adaptar com IA" da biblioteca).
   const autoFiredRef = useRef(false);
