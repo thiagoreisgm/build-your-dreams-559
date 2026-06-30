@@ -18,7 +18,7 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 export const Route = createFileRoute("/_authenticated/configuracoes")({
-  head: () => ({ meta: [{ title: "Configurações — GS One" }] }),
+  head: () => ({ meta: [{ title: "Configurações — postai" }] }),
   validateSearch: (s: Record<string, unknown>): { tab?: Tab } => {
     const t = String(s.tab ?? "");
     return TABS.some((x) => x.id === t) ? { tab: t as Tab } : {};

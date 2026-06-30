@@ -14,7 +14,7 @@ import {
 } from "@/lib/post-status";
 
 export const Route = createFileRoute("/_authenticated/planejamento")({
-  head: () => ({ meta: [{ title: "Planejamento — GS One" }] }),
+  head: () => ({ meta: [{ title: "Planejamento — postai" }] }),
   component: PlanejamentoPage,
 });
 

@@ -321,7 +321,7 @@ No fim, vence quem transforma demanda em processo — não em sorte.`,
               <div className="flex items-start gap-2.5 pt-2 text-xs text-[var(--color-muted)]">
                 <Shield className="h-3.5 w-3.5 shrink-0 text-[var(--color-sub)]" strokeWidth={1.6} />
                 <p>
-                  Sem auto-connect e sem auto-DM. O GS One captura o sinal e te entrega pronto — o último clique é seu. É o que mantém sua conta segura.
+                  Sem auto-connect e sem auto-DM. O postai captura o sinal e te entrega pronto — o último clique é seu. É o que mantém sua conta segura.
                 </p>
               </div>
             </div>

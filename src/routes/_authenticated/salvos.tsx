@@ -14,7 +14,7 @@ import {
 export const Route = createFileRoute("/_authenticated/salvos")({
   head: () => ({
     meta: [
-      { title: "Posts Salvos — GS One" },
+      { title: "Posts Salvos — postai" },
       { name: "description", content: "Sua biblioteca pessoal de posts virais salvos." },
     ],
   }),

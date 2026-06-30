@@ -32,7 +32,7 @@ const TABS: Tab[] = ["exemplos", "templates", "hooks", "salvos"];
 type PostsViraisSearch = { tab: Tab; format: string | null };
 
 export const Route = createFileRoute("/_authenticated/posts-virais")({
-  head: () => ({ meta: [{ title: "Posts Virais — GS One" }] }),
+  head: () => ({ meta: [{ title: "Posts Virais — postai" }] }),
   validateSearch: (raw: Record<string, unknown>): PostsViraisSearch => {
     const tab = TABS.includes(raw.tab as Tab) ? (raw.tab as Tab) : "exemplos";
     const fmt = typeof raw.format === "string" && raw.format.length > 0 ? raw.format : null;

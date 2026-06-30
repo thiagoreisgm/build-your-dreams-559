@@ -2,7 +2,7 @@
 @source "../src";
 @import "tw-animate-css";
 
-/* GS One — dark, clean, orange accent. Dark is the only theme. */
+/* postai — light, editorial, blue accent. */
 
 @theme inline {
   --radius-sm: 6px;
@@ -11,20 +11,22 @@
   --radius-xl: 18px;
   --radius-2xl: 22px;
 
-  --color-bg: #0a0a0b;
-  --color-surface: #131316;
-  --color-elevated: #1a1a1e;
-  --color-border: #242428;
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-elevated: #f5f6f8;
+  --color-border: #e6e8ec;
 
-  --color-orange: #f96500;
-  --color-gold: #d4af37;
+  /* Token names kept (--color-orange / --color-gold) to avoid a sweeping
+     rename across the app; values are the new postai blue palette. */
+  --color-orange: #1b57ff;
+  --color-gold: #6ba8ff;
 
-  --color-ink: #f2f2f3;
-  --color-sub: #a0a0a8;
-  --color-muted: #6b6b73;
-  --color-faint: #45454c;
+  --color-ink: #0a0a0a;
+  --color-sub: #4b5563;
+  --color-muted: #6b7280;
+  --color-faint: #9ca3af;
 
-  /* Shadcn semantic aliases so existing UI components keep working */
+  /* Shadcn semantic aliases */
   --color-background: var(--color-bg);
   --color-foreground: var(--color-ink);
   --color-card: var(--color-surface);
@@ -32,19 +34,19 @@
   --color-popover: var(--color-elevated);
   --color-popover-foreground: var(--color-ink);
   --color-primary: var(--color-orange);
-  --color-primary-foreground: var(--color-bg);
+  --color-primary-foreground: #ffffff;
   --color-secondary: var(--color-elevated);
   --color-secondary-foreground: var(--color-ink);
   --color-muted-foreground: var(--color-sub);
   --color-accent: var(--color-elevated);
   --color-accent-foreground: var(--color-ink);
-  --color-destructive: oklch(0.65 0.22 25);
-  --color-destructive-foreground: var(--color-ink);
+  --color-destructive: oklch(0.6 0.22 25);
+  --color-destructive-foreground: #ffffff;
   --color-input: var(--color-border);
   --color-ring: var(--color-orange);
 
-  --font-display: "Archivo Black", sans-serif;
-  --font-head: "Syne", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-head: "Space Grotesk", sans-serif;
   --font-body: "DM Sans", sans-serif;
 }
 
@@ -81,9 +83,12 @@
 
 @utility font-display {
   font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 @utility font-head {
   font-family: var(--font-head);
+  letter-spacing: -0.015em;
 }
 @utility font-body {
   font-family: var(--font-body);

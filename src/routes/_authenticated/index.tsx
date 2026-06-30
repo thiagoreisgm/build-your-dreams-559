@@ -7,8 +7,8 @@ import { useOpenComposer } from "@/components/gs/composer-context";
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
-      { title: "Dashboard — GS One" },
-      { name: "description", content: "Visão do loop GS One: conteúdo, sinal, prospecção, funil." },
+      { title: "Dashboard — postai" },
+      { name: "description", content: "Visão do loop postai: conteúdo, sinal, prospecção, funil." },
     ],
   }),
   component: Dashboard,
@@ -124,7 +124,7 @@ function Dashboard() {
 
           {/* Loop */}
           <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-            <h3 className="font-head mb-5 text-sm font-bold">O loop GS One</h3>
+            <h3 className="font-head mb-5 text-sm font-bold">O loop postai</h3>
             <div className="flex items-center gap-2 text-center text-xs">
               {LOOP.map((step, i) => (
                 <div key={step.label} className="flex flex-1 items-center gap-2">
