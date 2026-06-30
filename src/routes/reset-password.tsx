@@ -109,11 +109,8 @@ function ResetPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] px-4 text-[var(--color-ink)]">
       <div className="w-full max-w-sm">
-        <div className="mb-8 flex items-center gap-2.5">
-          <div className="font-display flex h-9 w-9 items-center justify-center rounded-md bg-[var(--color-orange)] text-[13px] text-[var(--color-bg)]">
-            GS
-          </div>
-          <span className="font-head text-xl font-bold tracking-tight">postai</span>
+        <div className="mb-8 flex items-center">
+          <img src={postaiLogo.url} alt="postai" className="h-7 w-auto" />
         </div>
 
         <h1 className="font-head text-2xl font-bold tracking-tight">Criar nova senha</h1>

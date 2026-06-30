@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
+import postaiLogo from "@/assets/postai-logo.png.asset.json";
 import { useIsAdmin } from "@/lib/admin";
 import { useOpenComposer } from "./composer-context";
 
@@ -85,11 +86,10 @@ export function Sidebar() {
 
   return (
     <aside className="fixed top-0 left-0 z-20 flex h-screen w-60 shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)]">
-      <div className="flex h-16 items-center gap-2.5 border-b border-[var(--color-border)] px-5">
-        <div className="font-display flex h-7 w-7 items-center justify-center rounded-md bg-[var(--color-orange)] text-[11px] text-[var(--color-bg)]">
-          GS
-        </div>
-        <span className="font-head text-[17px] font-bold tracking-tight">postai</span>
+      <div className="flex h-16 items-center border-b border-[var(--color-border)] px-5">
+        <Link to="/" className="flex items-center">
+          <img src={postaiLogo.url} alt="postai" className="h-6 w-auto" />
+        </Link>
       </div>
 
       <nav className="flex-1 overflow-y-auto py-5">
