@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { translateAuthError } from "@/routes/auth";
+import postaiLogo from "@/assets/postai-logo.png.asset.json";
 
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
