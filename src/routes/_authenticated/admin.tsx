@@ -66,7 +66,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
           : undefined,
     };
   },
-  head: () => ({ meta: [{ title: "Admin — GS One" }] }),
+  head: () => ({ meta: [{ title: "Admin — postai" }] }),
   component: AdminPage,
 });
 

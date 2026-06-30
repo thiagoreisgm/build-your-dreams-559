@@ -8,8 +8,8 @@ export const Route = createFileRoute("/reset-password")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Redefinir senha — GS One" },
-      { name: "description", content: "Crie uma nova senha para sua conta GS One." },
+      { title: "Redefinir senha — postai" },
+      { name: "description", content: "Crie uma nova senha para sua conta postai." },
     ],
   }),
   component: ResetPasswordPage,
@@ -113,7 +113,7 @@ function ResetPasswordPage() {
           <div className="font-display flex h-9 w-9 items-center justify-center rounded-md bg-[var(--color-orange)] text-[13px] text-[var(--color-bg)]">
             GS
           </div>
-          <span className="font-head text-xl font-bold tracking-tight">GS One</span>
+          <span className="font-head text-xl font-bold tracking-tight">postai</span>
         </div>
 
         <h1 className="font-head text-2xl font-bold tracking-tight">Criar nova senha</h1>

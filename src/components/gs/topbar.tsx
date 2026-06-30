@@ -20,7 +20,7 @@ const TITLES: Record<string, string> = {
 export function Topbar() {
   const openComposer = useOpenComposer();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const title = TITLES[pathname] ?? "GS One";
+  const title = TITLES[pathname] ?? "postai";
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-[var(--color-border)] bg-[var(--color-bg)]/70 px-10 backdrop-blur-xl">

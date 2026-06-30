@@ -2,6 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ComingSoon } from "@/components/gs/page";
 
 export const Route = createFileRoute("/_authenticated/revisar")({
-  head: () => ({ meta: [{ title: "Revisar & Enviar — GS One" }] }),
+  head: () => ({ meta: [{ title: "Revisar & Enviar — postai" }] }),
   component: () => <ComingSoon title="Revisar & Enviar" />,
 });

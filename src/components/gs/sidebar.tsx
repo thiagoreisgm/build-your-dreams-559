@@ -89,7 +89,7 @@ export function Sidebar() {
         <div className="font-display flex h-7 w-7 items-center justify-center rounded-md bg-[var(--color-orange)] text-[11px] text-[var(--color-bg)]">
           GS
         </div>
-        <span className="font-head text-[17px] font-bold tracking-tight">GS One</span>
+        <span className="font-head text-[17px] font-bold tracking-tight">postai</span>
       </div>
 
       <nav className="flex-1 overflow-y-auto py-5">

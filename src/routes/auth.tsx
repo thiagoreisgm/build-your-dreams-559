@@ -11,8 +11,8 @@ export const Route = createFileRoute("/auth")({
   }),
   head: () => ({
     meta: [
-      { title: "Entrar — GS One" },
-      { name: "description", content: "Acesse sua conta GS One." },
+      { title: "Entrar — postai" },
+      { name: "description", content: "Acesse sua conta postai." },
     ],
   }),
   component: AuthPage,
@@ -145,7 +145,7 @@ function AuthPage() {
           <div className="font-display flex h-9 w-9 items-center justify-center rounded-md bg-[var(--color-orange)] text-[13px] text-[var(--color-bg)]">
             GS
           </div>
-          <span className="font-head text-xl font-bold tracking-tight">GS One</span>
+          <span className="font-head text-xl font-bold tracking-tight">postai</span>
         </div>
 
         <h1 className="font-head text-2xl font-bold tracking-tight">
