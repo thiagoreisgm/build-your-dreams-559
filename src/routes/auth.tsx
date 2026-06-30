@@ -54,14 +54,14 @@ function AuthPage() {
 
   // Only allow same-origin internal paths to avoid open-redirect.
   function safeRedirect(raw: string | undefined): string {
-    if (!raw) return "/";
+    if (!raw) return "/dashboard";
     try {
       const url = new URL(raw, window.location.origin);
-      if (url.origin !== window.location.origin) return "/";
-      if (url.pathname === "/auth") return "/";
+      if (url.origin !== window.location.origin) return "/dashboard";
+      if (url.pathname === "/auth") return "/dashboard";
       return url.pathname + url.search + url.hash;
     } catch {
-      return raw.startsWith("/") && !raw.startsWith("//") ? raw : "/";
+      return raw.startsWith("/") && !raw.startsWith("//") ? raw : "/dashboard";
     }
   }
 
