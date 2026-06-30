@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedSinaisRouteImport } from './routes/_authenticated/sinais'
 import { Route as AuthenticatedSalvosRouteImport } from './routes/_authenticated/salvos'
 import { Route as AuthenticatedRevisarRouteImport } from './routes/_authenticated/revisar'
@@ -22,6 +21,7 @@ import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedIntegracoesRouteImport } from './routes/_authenticated/integracoes'
 import { Route as AuthenticatedIcpRouteImport } from './routes/_authenticated/icp'
 import { Route as AuthenticatedFunilRouteImport } from './routes/_authenticated/funil'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedConteudoRouteImport } from './routes/_authenticated/conteudo'
 import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedCadenciasRouteImport } from './routes/_authenticated/cadencias'
@@ -40,11 +40,6 @@ const AuthRoute = AuthRouteImport.update({
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSinaisRoute = AuthenticatedSinaisRouteImport.update({
   id: '/sinais',
@@ -94,6 +89,11 @@ const AuthenticatedFunilRoute = AuthenticatedFunilRouteImport.update({
   path: '/funil',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedConteudoRoute = AuthenticatedConteudoRouteImport.update({
   id: '/conteudo',
   path: '/conteudo',
@@ -117,13 +117,14 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AuthenticatedIndexRoute
+  '/': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadencias': typeof AuthenticatedCadenciasRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/conteudo': typeof AuthenticatedConteudoRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/funil': typeof AuthenticatedFunilRoute
   '/icp': typeof AuthenticatedIcpRoute
   '/integracoes': typeof AuthenticatedIntegracoesRoute
@@ -135,12 +136,14 @@ export interface FileRoutesByFullPath {
   '/sinais': typeof AuthenticatedSinaisRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/cadencias': typeof AuthenticatedCadenciasRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/conteudo': typeof AuthenticatedConteudoRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/funil': typeof AuthenticatedFunilRoute
   '/icp': typeof AuthenticatedIcpRoute
   '/integracoes': typeof AuthenticatedIntegracoesRoute
@@ -150,7 +153,6 @@ export interface FileRoutesByTo {
   '/revisar': typeof AuthenticatedRevisarRoute
   '/salvos': typeof AuthenticatedSalvosRoute
   '/sinais': typeof AuthenticatedSinaisRoute
-  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -161,6 +163,7 @@ export interface FileRoutesById {
   '/_authenticated/cadencias': typeof AuthenticatedCadenciasRoute
   '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/conteudo': typeof AuthenticatedConteudoRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/funil': typeof AuthenticatedFunilRoute
   '/_authenticated/icp': typeof AuthenticatedIcpRoute
   '/_authenticated/integracoes': typeof AuthenticatedIntegracoesRoute
@@ -170,7 +173,6 @@ export interface FileRoutesById {
   '/_authenticated/revisar': typeof AuthenticatedRevisarRoute
   '/_authenticated/salvos': typeof AuthenticatedSalvosRoute
   '/_authenticated/sinais': typeof AuthenticatedSinaisRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -182,6 +184,7 @@ export interface FileRouteTypes {
     | '/cadencias'
     | '/configuracoes'
     | '/conteudo'
+    | '/dashboard'
     | '/funil'
     | '/icp'
     | '/integracoes'
@@ -193,12 +196,14 @@ export interface FileRouteTypes {
     | '/sinais'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/auth'
     | '/reset-password'
     | '/admin'
     | '/cadencias'
     | '/configuracoes'
     | '/conteudo'
+    | '/dashboard'
     | '/funil'
     | '/icp'
     | '/integracoes'
@@ -208,7 +213,6 @@ export interface FileRouteTypes {
     | '/revisar'
     | '/salvos'
     | '/sinais'
-    | '/'
   id:
     | '__root__'
     | '/_authenticated'
@@ -218,6 +222,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cadencias'
     | '/_authenticated/configuracoes'
     | '/_authenticated/conteudo'
+    | '/_authenticated/dashboard'
     | '/_authenticated/funil'
     | '/_authenticated/icp'
     | '/_authenticated/integracoes'
@@ -227,7 +232,6 @@ export interface FileRouteTypes {
     | '/_authenticated/revisar'
     | '/_authenticated/salvos'
     | '/_authenticated/sinais'
-    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -258,13 +262,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/sinais': {
       id: '/_authenticated/sinais'
@@ -329,6 +326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFunilRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/conteudo': {
       id: '/_authenticated/conteudo'
       path: '/conteudo'
@@ -365,6 +369,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCadenciasRoute: typeof AuthenticatedCadenciasRoute
   AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedConteudoRoute: typeof AuthenticatedConteudoRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedFunilRoute: typeof AuthenticatedFunilRoute
   AuthenticatedIcpRoute: typeof AuthenticatedIcpRoute
   AuthenticatedIntegracoesRoute: typeof AuthenticatedIntegracoesRoute
@@ -374,7 +379,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRevisarRoute: typeof AuthenticatedRevisarRoute
   AuthenticatedSalvosRoute: typeof AuthenticatedSalvosRoute
   AuthenticatedSinaisRoute: typeof AuthenticatedSinaisRoute
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -382,6 +386,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCadenciasRoute: AuthenticatedCadenciasRoute,
   AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedConteudoRoute: AuthenticatedConteudoRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedFunilRoute: AuthenticatedFunilRoute,
   AuthenticatedIcpRoute: AuthenticatedIcpRoute,
   AuthenticatedIntegracoesRoute: AuthenticatedIntegracoesRoute,
@@ -391,7 +396,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedRevisarRoute: AuthenticatedRevisarRoute,
   AuthenticatedSalvosRoute: AuthenticatedSalvosRoute,
   AuthenticatedSinaisRoute: AuthenticatedSinaisRoute,
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

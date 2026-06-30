@@ -4,7 +4,7 @@ import { GSPage } from "@/components/gs/page";
 import { useOpenComposer } from "@/components/gs/composer-context";
 
 
-export const Route = createFileRoute("/_authenticated/")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
       { title: "Dashboard — postai" },
