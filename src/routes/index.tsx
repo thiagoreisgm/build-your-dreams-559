@@ -55,15 +55,15 @@ export const Route = createFileRoute("/")({
 
 /* ─────────────────────────── tokens ─────────────────────────── */
 
-const BG = "#0A0A0A";
-const SURFACE = "#141414";
-const SURFACE_2 = "#1A1A1A";
-const BORDER = "rgba(255,255,255,0.08)";
-const INK = "#FFFFFF";
-const INK_2 = "#F5F5F5";
-const SUB = "#9CA3AF";
-const ORANGE = "#F96500";
-const GOLD = "#D4AF37";
+const BG = "#FFFFFF";
+const SURFACE = "#F7F8FA";
+const SURFACE_2 = "#EEF1F6";
+const BORDER = "rgba(10,10,10,0.08)";
+const INK = "#0A0A0A";
+const INK_2 = "#1A1A1A";
+const SUB = "#5B6472";
+const ORANGE = "#1B57FF";
+const GOLD = "#0A3FCC";
 
 const fDisplay = { fontFamily: "'Archivo Black', sans-serif", letterSpacing: "-0.02em" };
 const fEyebrow = { fontFamily: "'Syne', sans-serif", letterSpacing: "0.18em" };
