@@ -376,7 +376,7 @@ function HeroMock() {
         <div className="flex items-center gap-3">
           <div
             className="h-10 w-10 rounded-full"
-            style={{ background: "linear-gradient(135deg,#F96500,#D4AF37)" }}
+            style={{ background: "linear-gradient(135deg,#1B57FF,#0A3FCC)" }}
           />
           <div>
             <div className="text-sm font-semibold" style={{ color: INK }}>
@@ -889,7 +889,7 @@ function Depoimentos() {
                 <figcaption className="mt-6 flex items-center gap-3 pt-4" style={{ borderTop: `1px solid ${BORDER}` }}>
                   <div
                     className="h-10 w-10 rounded-full"
-                    style={{ background: "linear-gradient(135deg,#D4AF37,#F96500)" }}
+                    style={{ background: "linear-gradient(135deg,#0A3FCC,#1B57FF)" }}
                     aria-hidden
                   />
                   <div className="text-sm">
