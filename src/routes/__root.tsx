@@ -76,21 +76,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "GS One — Conteúdo + Prospecção B2B" },
+      { title: "postai — Conteúdo + Prospecção B2B no LinkedIn" },
       {
         name: "description",
         content:
-          "GS One: sistema operacional de conteúdo no LinkedIn + prospecção compliant para B2B brasileiro.",
+          "postai: sistema operacional de conteúdo no LinkedIn + prospecção compliant para B2B brasileiro.",
       },
-      { property: "og:title", content: "GS One — Conteúdo + Prospecção B2B" },
-      { property: "og:description", content: "Building Blocks is a web application for constructing and managing digital content." },
+      { property: "og:title", content: "postai — Conteúdo + Prospecção B2B" },
+      { property: "og:description", content: "Conteúdo e prospecção no LinkedIn, num só lugar." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "GS One — Conteúdo + Prospecção B2B" },
-      { name: "description", content: "Building Blocks is a web application for constructing and managing digital content." },
-      { name: "twitter:description", content: "Building Blocks is a web application for constructing and managing digital content." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/855e4b9e-1cd9-4c28-b97e-a98c48bc67c1/id-preview-585d3c70--6d917630-dde7-4c11-b714-ae55ed06d983.lovable.app-1782319706190.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/855e4b9e-1cd9-4c28-b97e-a98c48bc67c1/id-preview-585d3c70--6d917630-dde7-4c11-b714-ae55ed06d983.lovable.app-1782319706190.png" },
+      { name: "twitter:title", content: "postai — Conteúdo + Prospecção B2B" },
+      { name: "twitter:description", content: "Conteúdo e prospecção no LinkedIn, num só lugar." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -98,7 +95,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Archivo+Black&family=Syne:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap",
       },
     ],
   }),
@@ -110,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className="dark">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
