@@ -87,7 +87,7 @@ export function Sidebar() {
   return (
     <aside className="fixed top-0 left-0 z-20 flex h-screen w-60 shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)]">
       <div className="flex h-16 items-center border-b border-[var(--color-border)] px-5">
-        <Link to="/" className="flex items-center">
+        <Link to="/dashboard" className="flex items-center">
           <img src={postaiLogo.url} alt="postai" className="h-6 w-auto" />
         </Link>
       </div>
